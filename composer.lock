@@ -1,0 +1,143 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "3b7ea44e1ebe1579d009755ce0c18022",
+    "packages": [
+        {
+            "name": "stripe/stripe-php",
+            "version": "v10.21.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stripe/stripe-php.git",
+                "reference": "b4ab319731958077227fad1874a3671458c5d593"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/b4ab319731958077227fad1874a3671458c5d593",
+                "reference": "b4ab319731958077227fad1874a3671458c5d593",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "3.5.0",
+                "php-coveralls/php-coveralls": "^2.5",
+                "phpstan/phpstan": "^1.2",
+                "phpunit/phpunit": "^5.7 || ^9.0",
+                "squizlabs/php_codesniffer": "^3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stripe\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stripe and contributors",
+                    "homepage": "https://github.com/stripe/stripe-php/contributors"
+                }
+            ],
+            "description": "Stripe PHP Library",
+            "homepage": "https://stripe.com/",
+            "keywords": [
+                "api",
+                "payment processing",
+                "stripe"
+            ],
+            "support": {
+                "issues": "https://github.com/stripe/stripe-php/issues",
+                "source": "https://github.com/stripe/stripe-php/tree/v10.21.0"
+            },
+            "time": "2023-08-11T00:23:24+00:00"
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "php-sage/sage",
+            "version": "v1.5.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-sage/sage.git",
+                "reference": "a6bbc9b837b53994df1b26d06522df4bf9df760f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-sage/sage/zipball/a6bbc9b837b53994df1b26d06522df4bf9df760f",
+                "reference": "a6bbc9b837b53994df1b26d06522df4bf9df760f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.1.0"
+            },
+            "require-dev": {
+                "pestphp/pest": "^1.0",
+                "seld/phar-utils": "^1.0",
+                "spatie/pest-plugin-snapshots": "^1.0",
+                "symfony/finder": "^3.0 || ^4.0 || ^5.0",
+                "symfony/var-dumper": "^6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Sage.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rokas Šleinius",
+                    "homepage": "https://github.com/raveren"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/php-sage/sage/contributors"
+                }
+            ],
+            "description": "☯ Insightful PHP debugging assistant.",
+            "homepage": "https://github.com/php-sage/sage",
+            "keywords": [
+                "debug",
+                "debug_backtrace",
+                "dump",
+                "dumper",
+                "json_decode",
+                "php",
+                "sage",
+                "var_dump"
+            ],
+            "support": {
+                "issues": "https://github.com/php-sage/sage/issues",
+                "source": "https://github.com/php-sage/sage/tree/v1.5.6"
+            },
+            "time": "2023-07-30T07:56:05+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
+}

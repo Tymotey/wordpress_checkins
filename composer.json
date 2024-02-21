@@ -1,0 +1,25 @@
+{
+    "name": "btdev/inscrieri",
+    "authors": [
+        {
+            "name": "Bondas Timotei",
+            "email": "bondastimotei@gmail.com"
+        }
+    ],
+    "require": {
+        "stripe/stripe-php": "^10.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "BTDEV_INSCRIERI\\Api\\": "libs/api/",
+            "BTDEV_INSCRIERI\\Abstracts\\": "libs/abstracts/",
+            "BTDEV_INSCRIERI\\Exceptions\\": "libs/exceptions/",
+            "BTDEV_INSCRIERI\\Classes\\ThirdParty\\": "libs/classes/ThirdParty/",
+            "BTDEV_INSCRIERI\\Classes\\": "libs/classes/",
+            "BTDEV_INSCRIERI\\Traits\\": "libs/traits/",
+            "BTDEV_INSCRIERI\\Forms\\": "libs/forms/",
+            "BTDEV_INSCRIERI\\Interfaces\\": "libs/interfaces/"
+        }
+    },
+    "require-dev": {}
+}
