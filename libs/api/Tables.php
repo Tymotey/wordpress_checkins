@@ -41,13 +41,12 @@ class Tables extends DEFAULT_DATA
         try {
             if (isset($_GET['table_type']) && $_GET['table_type'] !== '') {
                 $submissions_db_class = new BTDEV_INSCRIERI_SUBMISSIONDB($_GET['form_type']);
-                if (isset($_POST['custom_data']['payment_status'])) {
-                    $submissions_db_class->set_sql_param('where', "s.payment_status='" . $_POST['custom_data']['payment_status'] . "'");
-                }
+                $submissions_db_class->generate_sql_from_post($_POST);
 
                 if ($_GET['table_type'] === 'submissions') {
                 } else {
-                    $submissions_db_class->get_entries();
+                    $entries = $submissions_db_class->get_entries();
+                    $this->var_dump($entries, true);
                 }
             } else {
                 throw new BTDEV_INSCRIERI_EXCEPTIONSAPI('No table type sent.');
