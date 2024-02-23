@@ -216,22 +216,33 @@ abstract class DefaultData implements InterfaceForm
                     'id_entry' => [
                         'order' => 0,
                         'title' => 'Id',
+                        'table' => 'entry',
                     ],
                     'firstname' => [
                         'order' => 20,
                         'title' => 'Firstname',
+                        'table' => 'entry'
                     ],
                     'lastname' => [
                         'order' => 30,
                         'title' => 'Lastname',
+                        'table' => 'entry'
                     ],
                     'added_entry' => [
                         'order' => 100,
                         'title' => 'Date Added',
+                        'format' => 'date',
+                        'table' => 'entry',
+                        'settings_sql' => [
+                            'searchable' => false,
+                        ]
                     ],
                     'actions' => [
                         'order' => 110,
                         'title' => 'Actions',
+                        'settings_sql' => [
+                            'searchable' => false,
+                        ],
                         'settings' => [
                             'searchable' => false,
                             'orderable' => false,
@@ -257,7 +268,7 @@ abstract class DefaultData implements InterfaceForm
                         'order' => 30,
                         'title' => 'Lastname',
                     ],
-                    'added_payment' => [
+                    'added_entry' => [
                         'order' => 100,
                         'title' => 'Date Added',
                     ],
@@ -273,7 +284,6 @@ abstract class DefaultData implements InterfaceForm
                 ]
             ],
             'submissions' => [
-                'fields' => ['sub_fullname', 'sub_email', 'total', 'payment_name', 'payment_status', 'payment_invoice', 'referred_from', 'added_payment'],
                 'fields' => [
                     'id_submission' => [
                         'order' => 0,
@@ -323,50 +333,6 @@ abstract class DefaultData implements InterfaceForm
 
     public function __construct()
     {
-    }
-
-    public function get_column_custom_html($table, $field, $entry)
-    {
-        if ($field === 'total') {
-            return $entry['total'] . $entry['currency'];
-        } else if ($field === 'payment_status') {
-            $statuses = $this->utils_get_payments_stats();
-            return $statuses[$entry['payment_status']];
-        } else if ($field === 'payment_invoice') {
-            $return_data = $entry['payment_invoice'];
-            if ($return_data === 'yes') {
-                $return_data = $this->get_invoice_data($entry);
-            } else {
-                $return_data = 'No';
-            }
-
-            return $return_data;
-        } else if ($field === 'actions') {
-            $html = 'asdcascas';
-
-            return $html;
-        }
-    }
-
-    public function get_invoice_data($entry, $string = true)
-    {
-        $invoice_data = [];
-
-        if (isset($entry['company_name']) && $entry['company_name'] !== '') {
-            $invoice_data[] = __('Company', 'btdev_inscriere_text') . ': ' . $entry['company_name'];
-        }
-        if (isset($entry['company_cui']) && $entry['company_cui'] !== '') {
-            $invoice_data[] = $entry['company_cui'];
-        }
-        if (isset($entry['company_j']) && $entry['company_j'] !== '') {
-            $invoice_data[] = $entry['company_j'];
-        }
-        if (isset($entry['company_delegate']) && $entry['company_delegate'] !== '') {
-            $invoice_data[] = $entry['company_delegate'];
-        }
-
-        if ($string) return implode(', ', $invoice_data);
-        else return $invoice_data;
     }
 
     public function html_form_begin_area($form_data, $action = 'create')

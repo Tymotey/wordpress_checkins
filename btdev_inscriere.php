@@ -96,6 +96,7 @@ class Main
         add_shortcode('bbdev_inscrieri_list_payments', array($shortcodes, 'list_payments'));
         // For forms
         add_shortcode('bbdev_inscrieri_form', array($shortcodes, 'form'));
+        // TODO: must do
         add_shortcode('bbdev_inscrieri_form_edit', array($shortcodes, 'form'));
         // For email
         add_shortcode('bbdev_inscrieri_entry_summary', array($shortcodes, 'submission_summary'));

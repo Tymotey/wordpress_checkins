@@ -234,10 +234,12 @@ class DataMomentum extends DEFAULT_DATA
 						'atelier_a' => [
 							'order' => 40,
 							'title' => 'Atelier 1',
+							'table' => 'entry'
 						],
 						'atelier_ar' => [
 							'order' => 50,
 							'title' => 'Atelier 2',
+							'table' => 'entry'
 						]
 					]
 				],

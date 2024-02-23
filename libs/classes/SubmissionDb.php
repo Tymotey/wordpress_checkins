@@ -11,6 +11,7 @@ class SubmissionDb
     public $form = null;
     public $table_submissions = null;
     public $table_entries = null;
+    public $table_checkins = null;
     public $sql = [
         'select' => ['*'],
         'where' => [],
@@ -32,10 +33,11 @@ class SubmissionDb
 
         $this->table_submissions = $this->utils_get_db_tables('submission');
         $this->table_entries = $this->utils_get_db_tables('entry_form', $this->form->name);
+        $this->table_checkins = $this->utils_get_db_tables('checkins');
     }
 
     // SQL Parameters
-    public function generate_sql_from_post($data)
+    public function generate_sql_from_post($data, $table = null)
     {
         // Limits
         if (isset($data['start'])) {
@@ -54,9 +56,20 @@ class SubmissionDb
 
         // Search
         if (isset($data['search']) && isset($data['search']['value']) && $data['search']['value'] !== '') {
-            foreach ($data['order'] as $i => $order) {
-                $this->set_sql_param('order_by', [$data['columns'][$order['column']]['name'], strtoupper($order['dir'])]);
+            $search_fields = [];
+
+            $searchable = [];
+            $fields = $table->get_fields();
+            foreach ($fields as $k_f => $field) {
+                if (
+                    !isset($field['settings_sql']['searchable']) ||
+                    (isset($field['settings_sql']['searchable']) && $field['settings_sql']['searchable'] === true)
+                ) {
+                    $searchable[] = "e." . $k_f . " LIKE '%" . $data['search']['value'] . "%'";
+                }
             }
+
+            $this->set_sql_param('where', '(' . implode(' OR ', $searchable) . ')');
         }
 
         // Custom data
@@ -88,17 +101,19 @@ class SubmissionDb
             } else {
                 return '';
             }
-        } else if (in_array($param, ['limit', 'offset', 'select', 'order_by'])) {
+        } else if (in_array($param, ['select', 'order_by', 'where'])) {
             if (count($this->sql[$param]) > 0) {
                 if ($param === 'select') {
                     return implode(', ', $this->sql[$param]);
-                } else if ($param === 'order_by') {
+                } else if (in_array($param, ['order_by'])) {
                     $return_val = [];
                     foreach ($this->sql[$param] as $order_by) {
                         $return_val[] = $order_by[0] . ' ' . $order_by[1];
                     }
 
                     return ' ORDER BY ' . implode(', ', $return_val);
+                } else if (in_array($param, ['where'])) {
+                    return ' WHERE ' . implode(' AND ', $this->sql[$param]);
                 }
             } else {
                 return $this->sql[$param];
@@ -106,6 +121,7 @@ class SubmissionDb
         }
     }
 
+    // TODO: combine next functions into 2!
     // Submissions
     public function get_submissions_count()
     {
@@ -136,7 +152,7 @@ class SubmissionDb
     {
         global $wpdb;
 
-        $sql = "SELECT COUNT(*) FROM " . $this->table_entries . $this->prepare_sql_param('where') . $this->prepare_sql_param('group_by');
+        $sql = "SELECT COUNT(*) AS count FROM " . $this->table_entries . " AS e LEFT JOIN " . $this->table_submissions . " AS s ON e.id_submission = s.id_submission" . $this->prepare_sql_param('where') . $this->prepare_sql_param('group_by');
         $entries_count = $wpdb->get_var($sql);
 
         return $entries_count;
@@ -146,8 +162,8 @@ class SubmissionDb
     {
         global $wpdb;
 
-        $sql = "SELECT " . $this->prepare_sql_param('select') . " FROM " . $this->table_entries . $this->prepare_sql_param('where') . $this->prepare_sql_param('order_by') . $this->prepare_sql_param('group_by') . $this->prepare_sql_param('limit') . $this->prepare_sql_param('offset');
-        $this->var_dump($sql);
+        $sql = "SELECT " . $this->prepare_sql_param('select') . " FROM " . $this->table_entries . " AS e LEFT JOIN " . $this->table_submissions . " AS s ON e.id_submission = s.id_submission" . $this->prepare_sql_param('where') . $this->prepare_sql_param('order_by') . $this->prepare_sql_param('group_by') . $this->prepare_sql_param('limit') . $this->prepare_sql_param('offset');
+
         $entries = $wpdb->get_results($sql, ARRAY_A);
 
         if ($entries !== null) {

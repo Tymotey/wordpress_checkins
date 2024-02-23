@@ -92,7 +92,7 @@ class Tables
     {
         $fields = false;
 
-        if (isset($this->form->full_data['tables'][$this->table_type]['fields'])) {
+        if (isset($this->form->full_data['tables'][$this->table_type]) && count($this->form->full_data['tables'][$this->table_type]['fields']) > 0) {
             $fields = [];
             $fields = $this->form->full_data['tables'][$this->table_type]['fields'];
         }
@@ -122,7 +122,7 @@ class Tables
                 $columns_header[] = '<th>' . (isset($field['title']) ? $field['title'] : $k) . '</th>';
 
                 // Settings
-                $data = ['name' => $k];
+                $data = ['name' => $k, 'data' => $k];
                 if (isset($field['settings']) || isset($field['settings'])) {
                     if (count($field['settings']) > 0) {
                         $data = array_replace_recursive($data, $field['settings']);
@@ -140,43 +140,45 @@ class Tables
             if ($columns_header !== false) {
                 $sort_data = $this->get_sort();
 
-                $html .= $this->get_filters_html(['status']) . '
-                <table id="btdev_inscrieri_table_' . $this->table_type . '" class="btdev_inscrieri_table">
-                    <thead>
-                        <tr>' . $columns_header . '</tr>
-                    </thead>
-                    <tfoot>
-                        <tr>' . $columns_header . '</tr>
-                    </tfoot>
-                </table>
-                <link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css" />
-                <script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
-                <script type="text/javascript">
-                    jQuery(document).ready(function ($) {
-                        let dataTablesSettings = {
-                            ajax: {
-                                url: btdev_inscriere_ajax.ajax_url + "?action=btdev_inscrieri_table_operations&table_type=' . $this->table_type . '&form_type=' . $this->form->name . '",
-                                type: "POST",
-                                data: function (d) {
-                                    return $.extend({}, d, {
-                                        custom_data: {
-                                            payment_status: $("#filter_payment_status").val()
-                                        }
-                                    });
-                                }
-                            },
-                            processing: true,
-                            serverSide: true,
-                            ' . ($columns_data !== false ? 'columns: ' . json_encode($columns_data) . ',' : '') . '
-                            ' . ($sort_data !== false ? 'order: ' . json_encode($sort_data) . ',' : '') . '
-                            stateSave: true,
-                            scrollX: true,
-                            fixedHeader: true,
-                        };
-                        ' . (isset($this->form->full_data['tables'][$this->table_type]['settings']) ? 'dataTablesSettings = {...dataTablesSettings, ...' . json_encode($this->form->full_data['tables'][$this->table_type]['settings']) . '};' : '') . '
-                        let datatableBTDEV = $("#btdev_inscrieri_table_' . $this->table_type . '").DataTable(dataTablesSettings);
-                    });
-                </script>';
+                $html .= '<div class="table_wrapper">
+                    ' . $this->get_filters_html(['status']) . '
+                    <table id="btdev_inscrieri_table_' . $this->table_type . '" class="btdev_inscrieri_table">
+                        <thead>
+                            <tr>' . $columns_header . '</tr>
+                        </thead>
+                        <tfoot>
+                            <tr>' . $columns_header . '</tr>
+                        </tfoot>
+                    </table>
+                    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css" />
+                    <script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
+                    <script type="text/javascript">
+                        jQuery(document).ready(function ($) {
+                            let dataTablesSettings = {
+                                ajax: {
+                                    url: btdev_inscriere_ajax.ajax_url + "?action=btdev_inscrieri_table_operations&table_type=' . $this->table_type . '&form_type=' . $this->form->name . '",
+                                    type: "POST",
+                                    data: function (d) {
+                                        return $.extend({}, d, {
+                                            custom_data: {
+                                                payment_status: $("#filter_payment_status").val()
+                                            }
+                                        });
+                                    }
+                                },
+                                processing: true,
+                                serverSide: true,
+                                ' . ($columns_data !== false ? 'columns: ' . json_encode($columns_data) . ',' : '') . '
+                                ' . ($sort_data !== false ? 'order: ' . json_encode($sort_data) . ',' : '') . '
+                                stateSave: true,
+                                scrollX: true,
+                                fixedHeader: true,
+                            };
+                            ' . (isset($this->form->full_data['tables'][$this->table_type]['settings']) ? 'dataTablesSettings = {...dataTablesSettings, ...' . json_encode($this->form->full_data['tables'][$this->table_type]['settings']) . '};' : '') . '
+                            window["datatableBTDEV"] = $("#btdev_inscrieri_table_' . $this->table_type . '").DataTable(dataTablesSettings);
+                        });
+                    </script>
+                </div>';
             } else {
                 throw new BTDEV_INSCRIERI_EXCEPTIONSTABLE('No columns added');
             }
@@ -185,5 +187,78 @@ class Tables
         }
 
         return $html;
+    }
+
+    public function get_field_from_form($form, $field)
+    {
+        $return_val = false;
+
+        if (isset($form->full_data['repeater_fields']) && isset($form->full_data['repeater_fields'][$field])) {
+            return $form->full_data['repeater_fields'][$field];
+        }
+
+        return $return_val;
+    }
+
+    public function get_column_html($field, $field_data, $entry)
+    {
+        if ($field === 'total') {
+            return $entry['total'] . $entry['currency'];
+        } else if ($field === 'payment_status') {
+            $statuses = $this->utils_get_payments_stats();
+            return $statuses[$entry['payment_status']];
+        } else if ($field === 'payment_invoice') {
+            $return_data = $entry['payment_invoice'];
+            if ($return_data === 'yes') {
+                $return_data = $this->get_invoice_data($entry);
+            } else {
+                $return_data = 'No';
+            }
+
+            return $return_data;
+        } else if ($field === 'actions') {
+            // TODO: add actions
+            $html = 'asdcascas';
+
+            return $html;
+        } else {
+            if (in_array($field_data['type'], ['select', 'radio', 'checkbox'])) {
+                $found = null;
+                foreach ($field_data['options'] as $k => $option) {
+                    if ($k === $entry[$field]) {
+                        $found = $option['title'];
+                    }
+                }
+
+                if ($found === null) {
+                    return $entry[$field];
+                } else {
+                    return $found;
+                }
+            } else {
+                return $entry[$field];
+            }
+        }
+    }
+
+    public function get_invoice_data($entry, $string = true)
+    {
+        $invoice_data = [];
+
+        if (isset($entry['company_name']) && $entry['company_name'] !== '') {
+            $invoice_data[] = __('Company', 'btdev_inscriere_text') . ': ' . $entry['company_name'];
+        }
+        if (isset($entry['company_cui']) && $entry['company_cui'] !== '') {
+            $invoice_data[] = $entry['company_cui'];
+        }
+        if (isset($entry['company_j']) && $entry['company_j'] !== '') {
+            $invoice_data[] = $entry['company_j'];
+        }
+        if (isset($entry['company_delegate']) && $entry['company_delegate'] !== '') {
+            $invoice_data[] = $entry['company_delegate'];
+        }
+
+        if ($string) return implode(', ', $invoice_data);
+        else return $invoice_data;
     }
 }
