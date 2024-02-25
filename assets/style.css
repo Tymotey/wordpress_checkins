@@ -1,4 +1,6 @@
 /* ====== FORM - General ======== */
+.btdev_form,
+.btdev_form *{ box-sizing: border-box; }
 .btdev_form sup{ position: initial; }
 .btdev_form .black_text{ color: #000000; }
 .btdev_form .normal_case{ text-transform: none; }
@@ -122,6 +124,37 @@
 
 .summary_data{ background-color: #FFFFFF; border-radius: 8px; padding: 1rem; }
 .summary_data .summary_persons{  }
+
+
+.btdev_action_link{ cursor: pointer; margin-right: 5px; text-decoration: none; }
+.btdev_action_link.style_text_only:hover{ text-decoration: underline; }
+.btdev_action_link:before{ font-size: 24px; }
+.btdev_action_link[attr-disabled="true"]{ cursor: not-allowed; opacity: 0.5; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ====== FORM - CUSTOM ======== */
 

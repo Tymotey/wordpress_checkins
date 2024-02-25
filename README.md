@@ -8,3 +8,9 @@ open terminal to plugin folder
 npm install
 composer install
 ```
+
+# DEV tests
+
+```
+npx playwright test --ui
+```

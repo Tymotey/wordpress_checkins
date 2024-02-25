@@ -62,7 +62,7 @@ abstract class Payment
         if ($data_gateway !== false) {
             return $data_gateway;
         } else {
-            throw new BTDEV_INSCRIERI_EXCEPTIONSSUBMISSION(__('Incorrect payment configuration. Submission saved, but not validated.', 'btdev_inscriere_text'), $this->entry->form->get_form_page_url('url'));
+            throw new BTDEV_INSCRIERI_EXCEPTIONSSUBMISSION(__('Incorrect payment configuration.', 'btdev_inscriere_text'), $this->entry->form->get_form_page_url('url'));
         }
     }
     abstract public function prepare_payment();

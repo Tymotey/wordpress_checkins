@@ -415,11 +415,84 @@ jQuery(document).ready(function ($) {
 
     if ($(".table_wrapper").length) {
         $("body").on("change", "#filter_payment_status", function () {
-            window.datatableBTDEV.draw();
+            if (
+                window.datatableBTDEV.table !== undefined &&
+                window.datatableBTDEV.table !== undefined
+            ) {
+                window.datatableBTDEV.table.draw();
+            }
+        });
+
+        $("body").on("click", ".btdev_action_link", function () {
+            let element = $(this);
+            let elementData = element.attr("attr-data");
+            let elementDataJs = element.attr("attr-dataJs");
+            if (element.attr("attr-disabled") !== "true") {
+                try {
+                    if (elementData !== "" && elementDataJs !== "") {
+                        elementData = $.parseJSON(elementData);
+                        elementDataJs = $.parseJSON(elementDataJs);
+
+                        let doAction = false;
+                        if (
+                            elementDataJs.confirm !== undefined &&
+                            elementDataJs.confirm.enabled !== undefined &&
+                            elementDataJs.confirm.enabled === true
+                        ) {
+                            let text =
+                                btdev_inscriere_ajax.translation[
+                                    "please_confirm_the_action"
+                                ];
+                            if (
+                                elementDataJs.confirm !== undefined &&
+                                elementDataJs.confirm.text !== undefined &&
+                                elementDataJs.confirm.text !== ""
+                            ) {
+                                text = elementDataJs.confirm.text;
+                            }
+
+                            if (confirm(text)) doAction = true;
+                        } else {
+                            doAction = true;
+                        }
+
+                        if (doAction) {
+                            element.attr("attr-disabled", "true");
+                            jQuery
+                                .post(
+                                    btdev_inscriere_ajax.ajax_url,
+                                    elementData,
+                                    function (response) {
+                                        if (response.status === true) {
+                                        } else {
+                                            console.log(response.text);
+                                        }
+                                    }
+                                )
+                                .fail(function (e) {
+                                    console.log(
+                                        e.status +
+                                            ": " +
+                                            (e.statusText || "error")
+                                    );
+                                })
+                                .always(function () {
+                                    element.removeAttr("attr-disabled");
+                                });
+                        }
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            /*
+            window.datatableBTDEV.formType
+            window.datatableBTDEV.tableType
+            */
         });
     }
 
-    // TO EDIT!!!!
+    // TODO: TO LOOK OVER!!!!!!!!
     if ($(".datatableBBSO").length) {
         $("body").on("click", ".table_details_toggle", function (e) {
             $(this).closest("table").find(".tr_to_toggle").toggle();

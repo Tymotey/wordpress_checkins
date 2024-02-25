@@ -6,12 +6,12 @@ trait Utils
 {
     public function utils_get_absolute_path()
     {
-        return __DIR__ . '/';
+        return __DIR__ . '/../../';
     }
 
     public function utils_get_absolute_url()
     {
-        return plugin_dir_url(dirname(dirname(dirname(__FILE__))) . '\index.php');
+        return plugin_dir_url(dirname(dirname(__FILE__)));
     }
 
     public function utils_get_plugin_js_var()
@@ -21,7 +21,7 @@ trait Utils
 
     public function utils_get_recaptcha()
     {
-        $data = require_once 'secrets.php';
+        $data = require_once $this->utils_get_absolute_path() . 'secrets.php';
         $mode = $this->utils_is_site_local() ? 'local' : 'live';
 
         if ($name !== null) {
@@ -66,9 +66,9 @@ trait Utils
 
     public function utils_get_payment_data($name = null, $mode = 'live')
     {
-        $data = require_once 'secrets.php';
+        $data = require_once $this->utils_get_absolute_path() . 'secrets.php';
 
-        if ($name !== null) {
+        if ($name !== null && isset($data[$name])) {
             return $data[$name][$mode];
         } else return false;
     }

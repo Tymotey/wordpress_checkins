@@ -236,17 +236,6 @@ abstract class DefaultData implements InterfaceForm
                         'settings_sql' => [
                             'searchable' => false,
                         ]
-                    ],
-                    'actions' => [
-                        'order' => 110,
-                        'title' => 'Actions',
-                        'settings_sql' => [
-                            'searchable' => false,
-                        ],
-                        'settings' => [
-                            'searchable' => false,
-                            'orderable' => false,
-                        ]
                     ]
                 ]
             ],
@@ -275,7 +264,9 @@ abstract class DefaultData implements InterfaceForm
                     'actions' => [
                         'order' => 110,
                         'title' => 'Actions',
-                        'custom_html' => true,
+                        'settings_sql' => [
+                            'searchable' => false,
+                        ],
                         'settings' => [
                             'searchable' => false,
                             'orderable' => false,

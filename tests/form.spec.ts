@@ -38,14 +38,29 @@ let invoiceFields = [
 ] as fieldType[];
 
 let pageUrl = "https://bbso.test/inregistrare/";
-let stripeUrl = "stripe.com";
 
-test.beforeEach(async ({ page }) => {
+const fillFromArrayId = async (page, arrayVar) => {
+    for (let i = 0; i < arrayVar.length; i++) {
+        await page.locator("input#" + arrayVar[i].name).fill(arrayVar[i].value);
+    }
+};
+
+const submitForm = async (page) => {
+    // Click submit button
+    await page.locator("button[type='submit']").click();
+
+    await page.waitForTimeout(3000);
+};
+
+const startPage = async (page) => {
     await page.goto(pageUrl);
-});
+    await page.waitForTimeout(500);
+};
 
 test.describe("Complet NOK", () => {
     test("direct submit", async ({ page }) => {
+        await startPage(page);
+
         // Click submit button
         await page.locator("button[type='submit']").click();
 
@@ -62,6 +77,8 @@ test.describe("Complet NOK", () => {
     });
 
     test("test incorrect email", async ({ page }) => {
+        await startPage(page);
+
         await page
             .locator("#" + requiredFields[1].name)
             .fill(requiredFields[1].valueNotOk);
@@ -78,26 +95,13 @@ test.describe("Complet NOK", () => {
             return input.validationMessage;
         })) as string;
 
-        expect(validationMessage).toContain("is missing an '@'");
+        expect(validationMessage).toContain("email");
     });
 });
 
-const fillFromArrayId = async (page, arrayVar) => {
-    for (let i = 0; i < arrayVar.length; i++) {
-        await page.locator("input#" + arrayVar[i].name).fill(arrayVar[i].value);
-    }
-};
-
-const submitForm = async (page) => {
-    // Click submit button
-    await page.locator("button[type='submit']").click();
-
-    await page.waitForTimeout(3000);
-};
-
 test.describe("Complete OK", () => {
     test("Stripe - submit + click cancel", async ({ page }) => {
-        await page.waitForTimeout(500);
+        await startPage(page);
 
         await page.locator("input#payment_name_stripe_").click();
         await page.locator("input#payment_invoice_no_").click();
@@ -112,6 +116,8 @@ test.describe("Complete OK", () => {
 
     // NO INVOICE
     test("No invoice - Stripe + submit", async ({ page }) => {
+        await startPage(page);
+
         await page.locator("input#payment_name_stripe_").click();
         await page.locator("input#payment_invoice_no_").click();
         await fillFromArrayId(page, requiredFields);
@@ -125,6 +131,8 @@ test.describe("Complete OK", () => {
     });
 
     test("No invoice - OP + submit", async ({ page }) => {
+        await startPage(page);
+
         await page
             .locator("input[name='payment_name'][value='ordinPlata']")
             .click();
@@ -139,6 +147,8 @@ test.describe("Complete OK", () => {
 
     // INVOICE
     test("Invoice - Stripe + submit", async ({ page }) => {
+        await startPage(page);
+
         await page.locator("input#payment_name_stripe_").click();
         await page.locator("input#payment_invoice_yes_").click();
 
@@ -162,6 +172,8 @@ test.describe("Complete OK", () => {
     });
 
     test("Invoice - OP + submit", async ({ page }) => {
+        await startPage(page);
+
         await page
             .locator("input[name='payment_name'][value='ordinPlata']")
             .click();

@@ -39,7 +39,6 @@ if (!defined('ABSPATH')) {
 
 session_start();
 require_once 'vendor/autoload.php';
-require_once 'integrations/Elementor/integrate.php';
 
 class Main
 {
@@ -58,6 +57,8 @@ class Main
         add_action('init', array($this, 'add_shortcodes'));
         add_action('init', array($this, 'add_get_actions'));
         add_action('init', array(new BTDEV_INSCRIERI_API_TABLES(), 'add_ajax_handles'));
+
+        add_action('admin_init', array($this, 'load_integrations'));
     }
 
     public function add_scripts_css()
@@ -81,10 +82,15 @@ class Main
             'ajax_url' => admin_url('admin-ajax.php'),
             'translation' => [
                 'participant' => __('Participant', 'btdev_inscriere_text'),
-                'you_must_have_at_least_one_entry' => __('Trebuie sa ai un participant in lista.', 'btdev_inscriere_text'),
-                'are_you_sure_you_want_to_delete' => __('Ești sigur că vrei să ștergi?', 'btdev_inscriere_text'),
+                'you_must_have_at_least_one_entry' => __('You must have at least one participant.', 'btdev_inscriere_text'),
+                'are_you_sure_you_want_to_delete' => __('Are you sure you want to delete?', 'btdev_inscriere_text'),
+                'please_confirm_the_action' => __('Please confirm the action.', 'btdev_inscriere_text'),
             ]
         ));
+
+        if (!wp_style_is('dashicons')) {
+            wp_enqueue_style('dashicons');
+        }
     }
 
     public function add_shortcodes()
@@ -96,7 +102,7 @@ class Main
         add_shortcode('bbdev_inscrieri_list_payments', array($shortcodes, 'list_payments'));
         // For forms
         add_shortcode('bbdev_inscrieri_form', array($shortcodes, 'form'));
-        // TODO: must do
+        // TODO: must do edit
         add_shortcode('bbdev_inscrieri_form_edit', array($shortcodes, 'form'));
         // For email
         add_shortcode('bbdev_inscrieri_entry_summary', array($shortcodes, 'submission_summary'));
@@ -240,6 +246,13 @@ class Main
                 $this->do_redirect('/');
                 // TODO: change this to more descriptive
             }
+        }
+    }
+
+    public function load_integrations()
+    {
+        if (is_plugin_active('elementor/elementor.php')) {
+            require_once 'integrations/Elementor/integrate.php';
         }
     }
 }

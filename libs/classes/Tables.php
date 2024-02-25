@@ -175,7 +175,10 @@ class Tables
                                 fixedHeader: true,
                             };
                             ' . (isset($this->form->full_data['tables'][$this->table_type]['settings']) ? 'dataTablesSettings = {...dataTablesSettings, ...' . json_encode($this->form->full_data['tables'][$this->table_type]['settings']) . '};' : '') . '
-                            window["datatableBTDEV"] = $("#btdev_inscrieri_table_' . $this->table_type . '").DataTable(dataTablesSettings);
+                            window["datatableBTDEV"] = {};
+                            window["datatableBTDEV"]["table"] = $("#btdev_inscrieri_table_' . $this->table_type . '").DataTable(dataTablesSettings);
+                            window["datatableBTDEV"]["formType"] = "' . $this->form->name . '";
+                            window["datatableBTDEV"]["tableType"] = "' . $this->table_type . '";
                         });
                     </script>
                 </div>';
@@ -200,6 +203,75 @@ class Tables
         return $return_val;
     }
 
+    public function get_actions_html($action, $entry, $settings = null)
+    {
+        $action_data = [
+            'btn_id' => $action,
+            'text' => 'Action1',
+            'style' => 'icon',
+            'inline' => true,
+            'icon' => '',
+            'classes' => [],
+            'attr' => [],
+            'data' => [],
+        ];
+        if ($settings !== null) {
+            $action_data = array_merge($action_data, $settings);
+        }
+        switch ($action) {
+            case 'entry-delete':
+                $action_data['text'] = 'Delete Entry';
+                $action_data['data']['idEntry'] = $entry['id_entry'];
+                $action_data['data']['action'] = $action;
+                $action_data['attr']['confirm']['enabled'] = true;
+                $action_data['attr']['confirm']['text'] = 'This will delete the entry. Please confirm.';
+                if (in_array($action_data['style'], ['icon', 'icon_text'])) {
+                    $action_data['icon'] = '<i class="dashicons dashicons-remove"></i>';
+                }
+                break;
+            case 'payment-cancel':
+                $action_data['text'] = 'Cancel Payment';
+                $action_data['data']['idEntry'] = $entry['id_entry'];
+                $action_data['data']['action'] = $action;
+                $action_data['attr']['confirm']['enabled'] = true;
+                $action_data['attr']['confirm']['text'] = 'This will cancel the payment and all the entries will be disabled. Please confirm.';
+                if (in_array($action_data['style'], ['icon', 'icon_text'])) {
+                    $action_data['icon'] = '<i class="dashicons dashicons-no-alt"></i>';
+                }
+                break;
+            case 'payment-delete':
+                $action_data['text'] = 'Delete Payment';
+                $action_data['data']['idEntry'] = $entry['id_entry'];
+                $action_data['data']['action'] = $action;
+                $action_data['attr']['confirm']['enabled'] = true;
+                $action_data['attr']['confirm']['text'] = 'This will delete the payment and all the entries of this payment. Please confirm.';
+                if (in_array($action_data['style'], ['icon', 'icon_text'])) {
+                    $action_data['icon'] = '<i class="dashicons dashicons-trash"></i>';
+                }
+                break;
+        }
+
+        $attr_html = '';
+        if (count($action_data['attr']) > 0) {
+            foreach ($action_data['attr'] as $attr) {
+                $attr_html .= implode('="', $attr) . '"';
+            }
+            $attr_html .= ' ';
+        }
+
+        if ($action_data['style'] === 'text') {
+            $action_data['classes'][] = 'style_text_only';
+        }
+
+        //$attr_html
+        $html = '<a class="btdev_action_link btdev_action_' . $action_data['btn_id'] . (count($action_data['classes']) > 0 ? ' ' . implode(' ', $action_data['classes']) : '') . '" attr-dataJs="' . htmlentities(json_encode($action_data['attr'])) . '" attr-data="' . htmlentities(json_encode($action_data['data'])) . '" title="' . __($action_data['text'], 'btdev_inscriere_text') . '">' .
+            (in_array($action_data['style'], ['icon', 'icon_text']) ? $action_data['icon'] : "") .
+            (in_array($action_data['style'], ['text', 'icon_text']) ? __($action_data['text'], 'btdev_inscriere_text') : "") .
+            '</a>' . ($action_data['inline'] !== true ? '<br />' : '');
+
+        return $html;
+    }
+
     public function get_column_html($field, $field_data, $entry)
     {
         if ($field === 'total') {
@@ -217,8 +289,13 @@ class Tables
 
             return $return_data;
         } else if ($field === 'actions') {
-            // TODO: add actions
-            $html = 'asdcascas';
+            $html = '';
+
+            if ($this->table_type === 'entries_admin') {
+                $html .= $this->get_actions_html('entry-delete', $entry);
+                $html .= $this->get_actions_html('payment-cancel', $entry);
+                $html .= $this->get_actions_html('payment-delete', $entry);
+            }
 
             return $html;
         } else {
