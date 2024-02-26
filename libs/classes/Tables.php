@@ -222,7 +222,8 @@ class Tables
             case 'entry-delete':
                 $action_data['text'] = 'Delete Entry';
                 $action_data['data']['idEntry'] = $entry['id_entry'];
-                $action_data['data']['action'] = $action;
+                $action_data['data']['action'] = 'btdev_inscrieri_entry_delete';
+                $action_data['data']['nonce'] = wp_create_nonce('btdev_inscrieri_entry_delete');
                 $action_data['attr']['confirm']['enabled'] = true;
                 $action_data['attr']['confirm']['text'] = 'This will delete the entry. Please confirm.';
                 if (in_array($action_data['style'], ['icon', 'icon_text'])) {
@@ -232,7 +233,8 @@ class Tables
             case 'payment-cancel':
                 $action_data['text'] = 'Cancel Payment';
                 $action_data['data']['idEntry'] = $entry['id_entry'];
-                $action_data['data']['action'] = $action;
+                $action_data['data']['action'] = 'btdev_inscrieri_submission_cancel';
+                $action_data['data']['nonce'] = wp_create_nonce('btdev_inscrieri_submission_cancel');
                 $action_data['attr']['confirm']['enabled'] = true;
                 $action_data['attr']['confirm']['text'] = 'This will cancel the payment and all the entries will be disabled. Please confirm.';
                 if (in_array($action_data['style'], ['icon', 'icon_text'])) {
@@ -242,7 +244,8 @@ class Tables
             case 'payment-delete':
                 $action_data['text'] = 'Delete Payment';
                 $action_data['data']['idEntry'] = $entry['id_entry'];
-                $action_data['data']['action'] = $action;
+                $action_data['data']['action'] = 'btdev_inscrieri_submission_delete';
+                $action_data['data']['nonce'] = wp_create_nonce('btdev_inscrieri_submission_delete');
                 $action_data['attr']['confirm']['enabled'] = true;
                 $action_data['attr']['confirm']['text'] = 'This will delete the payment and all the entries of this payment. Please confirm.';
                 if (in_array($action_data['style'], ['icon', 'icon_text'])) {

@@ -61,6 +61,25 @@ class Stripe extends A_PAYMENT implements I_PAYMENT
         ];
     }
 
+    private function get_payment_id_from_session($entry, $table)
+    {
+        global $wpdb;
+
+        $payment_id = false;
+        $mode = $entry->form->full_data['mode'];
+        $data_gateway = $this->get_payment_data($mode);
+        $stripe = new \Stripe\StripeClient($data_gateway['secret_key']);
+        $stripe_session = $stripe->checkout->sessions->retrieve($entry->data['payment_session_id']);
+
+        if (isset($stripe_session['payment_intent']) && $stripe_session['payment_intent'] !== null) {
+            $payment_id = $stripe_session['payment_intent'];
+
+            if ($payment_id !== false) {
+                $wpdb->update($table, ['payment_id' => $payment_id], ['id_submission' => $entry->data['id_submission']]);
+            }
+        }
+    }
+
     public function success_payment()
     {
         global $wpdb;
@@ -68,6 +87,10 @@ class Stripe extends A_PAYMENT implements I_PAYMENT
 
         $table = $this->utils_get_db_tables('submission');
         $wpdb->update($table, ['payment_status' => 'success'], ['id_submission' => $entry->data['id_submission']]);
+
+        $this->get_payment_id_from_session($entry, $table);
+        // TODO: create and send invoice
+        // TODO: send emails
     }
 
     public function failure_payment()
@@ -77,5 +100,6 @@ class Stripe extends A_PAYMENT implements I_PAYMENT
 
         $table = $this->utils_get_db_tables('submission');
         $wpdb->update($table, ['payment_status' => 'canceled'], ['id_submission' => $entry->data['id_submission']]);
+        // TODO: send emails
     }
 }

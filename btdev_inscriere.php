@@ -24,11 +24,13 @@
 namespace BTDEV_INSCRIERI;
 
 use BTDEV_INSCRIERI\Exceptions\Submission as BTDEV_INSCRIERI_EXCEPTIONSSUBMISSION;
+use BTDEV_INSCRIERI\Exceptions\Payment as BTDEV_INSCRIERI_EXCEPTIONSPAYMENT;
 
 use BTDEV_INSCRIERI\Traits\Utils as BTDEV_INSCRIERI_UTILS;
 use BTDEV_INSCRIERI\Traits\HtmlMessages as BTDEV_INSCRIERI_MESSAGES;
 
 use BTDEV_INSCRIERI\Api\Tables as BTDEV_INSCRIERI_API_TABLES;
+use BTDEV_INSCRIERI\Api\Entries as BTDEV_INSCRIERI_API_ENTRIES;
 use BTDEV_INSCRIERI\Classes\Shortcodes as BTDEV_INSCRIERI_SHORTCODES;
 use BTDEV_INSCRIERI\Classes\Submission as BTDEV_INSCRIERI_SUBMISSION;
 use BTDEV_INSCRIERI\Classes\ThirdParty\Captcha as BTDEV_INSCRIERI_THIRDPARTY_CAPTCHA;
@@ -57,6 +59,7 @@ class Main
         add_action('init', array($this, 'add_shortcodes'));
         add_action('init', array($this, 'add_get_actions'));
         add_action('init', array(new BTDEV_INSCRIERI_API_TABLES(), 'add_ajax_handles'));
+        add_action('init', array(new BTDEV_INSCRIERI_API_ENTRIES(), 'add_ajax_handles'));
 
         add_action('admin_init', array($this, 'load_integrations'));
     }
@@ -203,22 +206,33 @@ class Main
 
             $table = $this->utils_get_db_tables('submission');
             $submission_db = $wpdb->get_row("SELECT * FROM " . $table . " WHERE payment_session_id = '" . $session_id . "'", ARRAY_A);
-            if ($submission_db !== null) {
-                $classnameForm = 'BTDEV_INSCRIERI\\Forms\\Data' . ucfirst($submission_db['form_name']);
-                $form_class = new $classnameForm();
-                $submission = new BTDEV_INSCRIERI_SUBMISSION($submission_db, $form_class);
-                $classname = 'BTDEV_INSCRIERI\\Classes\\ThirdParty\\' . ucfirst($submission->data['payment_name']);
-                if (class_exists($classname)) {
-                    $payment_class = new $classname();
-                    $payment_class->load_submission($submission);
-                    $payment_class->failure_payment();
+            try {
+                if ($submission_db !== null) {
+                    $classnameForm = 'BTDEV_INSCRIERI\\Forms\\Data' . ucfirst($submission_db['form_name']);
+                    $form_class = new $classnameForm();
+                    $submission = new BTDEV_INSCRIERI_SUBMISSION($submission_db, $form_class);
+                    $classname = 'BTDEV_INSCRIERI\\Classes\\ThirdParty\\' . ucfirst($submission->data['payment_name']);
+                    if (class_exists($classname)) {
+                        $payment_class = new $classname();
+                        $payment_class->load_submission($submission);
+                        $payment_class->failure_payment();
+                    } else {
+                        throw new BTDEV_INSCRIERI_EXCEPTIONSPAYMENT('No payment class found.');
+                        $this->do_redirect('/');
+                    }
                 } else {
+                    throw new BTDEV_INSCRIERI_EXCEPTIONSPAYMENT('No submission found.');
                     $this->do_redirect('/');
-                    // TODO: change this to more descriptive
                 }
-            } else {
-                $this->do_redirect('/');
-                // TODO: change this to more descriptive
+            } catch (BTDEV_INSCRIERI_EXCEPTIONSPAYMENT $e) {
+                $this->messages_add(__($e->message, 'btdev_inscriere_text'));
+            } catch (\Exception $e) {
+                $this->messages_add(
+                    sprintf(
+                        __('Unexpected exception: %s.', 'btdev_inscriere_text'),
+                        $e->getMessage()
+                    )
+                );
             }
         }
 
@@ -229,28 +243,41 @@ class Main
 
             $table = $this->utils_get_db_tables('submission');
             $submission_db = $wpdb->get_row("SELECT * FROM " . $table . " WHERE payment_session_id = '" . $session_id . "'", ARRAY_A);
-            if ($submission_db !== null) {
-                $classnameForm = 'BTDEV_INSCRIERI\\Forms\\Data' . ucfirst($submission_db['form_name']);
-                $form_class = new $classnameForm();
-                $submission = new BTDEV_INSCRIERI_SUBMISSION($submission_db, $form_class);
-                $classname = 'BTDEV_INSCRIERI\\Classes\\ThirdParty\\' . ucfirst($submission->data['payment_name']);
-                if (class_exists($classname)) {
-                    $payment_class = new $classname();
-                    $payment_class->load_submission($submission);
-                    $payment_class->success_payment();
+            try {
+                if ($submission_db !== null) {
+                    $classnameForm = 'BTDEV_INSCRIERI\\Forms\\Data' . ucfirst($submission_db['form_name']);
+                    $form_class = new $classnameForm();
+                    $submission = new BTDEV_INSCRIERI_SUBMISSION($submission_db, $form_class);
+                    $classname = 'BTDEV_INSCRIERI\\Classes\\ThirdParty\\' . ucfirst($submission->data['payment_name']);
+                    if (class_exists($classname)) {
+                        $payment_class = new $classname();
+                        $payment_class->load_submission($submission);
+                        $payment_class->success_payment();
+                    } else {
+                        throw new BTDEV_INSCRIERI_EXCEPTIONSPAYMENT('No payment class found.');
+                        $this->do_redirect('/');
+                    }
                 } else {
+                    throw new BTDEV_INSCRIERI_EXCEPTIONSPAYMENT('No submission found.');
                     $this->do_redirect('/');
-                    // TODO: change this to more descriptive
                 }
-            } else {
-                $this->do_redirect('/');
-                // TODO: change this to more descriptive
+            } catch (BTDEV_INSCRIERI_EXCEPTIONSPAYMENT $e) {
+                $this->messages_add(__($e->message, 'btdev_inscriere_text'));
+            } catch (\Exception $e) {
+                $this->messages_add(
+                    sprintf(
+                        __('Unexpected exception: %s.', 'btdev_inscriere_text'),
+                        $e->getMessage()
+                    )
+                );
             }
         }
     }
 
     public function load_integrations()
     {
+        require_once 'integrations/Gutenberg/integrate.php';
+
         if (is_plugin_active('elementor/elementor.php')) {
             require_once 'integrations/Elementor/integrate.php';
         }

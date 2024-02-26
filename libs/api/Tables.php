@@ -84,15 +84,11 @@ class Tables extends DEFAULT_DATA
             }
 
             $return_val['draw'] = $_POST['draw'];
-            unset($return_val['error']);
-
-            // $this->var_dump($_GET);
-            // $this->var_dump($_POST, true);
-            // $this->var_dump($return_val, true);
+            unset($return_val['message']);
         } catch (BTDEV_INSCRIERI_EXCEPTIONSAPI $e) {
-            $return_val['error'] = 'API: ' . __($e->message, 'btdev_inscriere_text');
+            $return_val['message'] = 'API: ' . __($e->message, 'btdev_inscriere_text');
         } catch (Exception $e) {
-            $return_val['error'] = 'API: ' . __($e->getMessage(), 'btdev_inscriere_text');
+            $return_val['message'] = 'API: ' . __($e->getMessage(), 'btdev_inscriere_text');
         }
 
 
