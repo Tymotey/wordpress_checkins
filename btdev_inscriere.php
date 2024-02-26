@@ -33,6 +33,7 @@ use BTDEV_INSCRIERI\Api\Tables as BTDEV_INSCRIERI_API_TABLES;
 use BTDEV_INSCRIERI\Api\Entries as BTDEV_INSCRIERI_API_ENTRIES;
 use BTDEV_INSCRIERI\Classes\Shortcodes as BTDEV_INSCRIERI_SHORTCODES;
 use BTDEV_INSCRIERI\Classes\Submission as BTDEV_INSCRIERI_SUBMISSION;
+use BTDEV_INSCRIERI\Classes\Tables as BTDEV_INSCRIERI_TABLES;
 use BTDEV_INSCRIERI\Classes\ThirdParty\Captcha as BTDEV_INSCRIERI_THIRDPARTY_CAPTCHA;
 
 if (!defined('ABSPATH')) {
@@ -67,7 +68,29 @@ class Main
     public function add_scripts_css()
     {
         add_action('wp_enqueue_scripts', array($this, 'init_assets'));
-        // add_action('admin_enqueue_scripts', array($this, 'admin_init_assets'));
+        add_action('admin_enqueue_scripts', array($this, 'admin_init_assets'));
+    }
+
+    public function common_assets($is_admin = false)
+    {
+        $handle = 'btdev_inscriere_main' . ($is_admin ? '_admin' : '') . '_script';
+        $data = [
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'translation' => [
+                'participant' => __('Participant', 'btdev_inscriere_text'),
+                'you_must_have_at_least_one_entry' => __('You must have at least one participant.', 'btdev_inscriere_text'),
+                'are_you_sure_you_want_to_delete' => __('Are you sure you want to delete?', 'btdev_inscriere_text'),
+                'please_confirm_the_action' => __('Please confirm the action.', 'btdev_inscriere_text'),
+            ]
+        ];
+
+        if (is_admin()) {
+            $data['forms'] = $this->utils_get_forms('Choose a form');
+            $table = new BTDEV_INSCRIERI_TABLES();
+            $data['tables'] = $table->get_table_types();
+        }
+
+        wp_localize_script($handle, $this->utils_get_plugin_js_var(), $data);
     }
 
     public function init_assets()
@@ -81,19 +104,17 @@ class Main
         wp_enqueue_script('btdev_inscriere_datatable_fixed', 'https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js', array('jquery'), '3.4.0', true);
         wp_enqueue_script('btdev_inscriere_main_script', $this->utils_get_absolute_url() . 'assets/script.js', array('jquery'), $this->utils_get_assets_version(), true);
 
-        wp_localize_script('btdev_inscriere_main_script', $this->utils_get_plugin_js_var(), array(
-            'ajax_url' => admin_url('admin-ajax.php'),
-            'translation' => [
-                'participant' => __('Participant', 'btdev_inscriere_text'),
-                'you_must_have_at_least_one_entry' => __('You must have at least one participant.', 'btdev_inscriere_text'),
-                'are_you_sure_you_want_to_delete' => __('Are you sure you want to delete?', 'btdev_inscriere_text'),
-                'please_confirm_the_action' => __('Please confirm the action.', 'btdev_inscriere_text'),
-            ]
-        ));
+        $this->common_assets();
 
         if (!wp_style_is('dashicons')) {
             wp_enqueue_style('dashicons');
         }
+    }
+
+    public function admin_init_assets()
+    {
+        wp_enqueue_script('btdev_inscriere_main_admin_script', $this->utils_get_absolute_url() . 'assets/admin/script.js', array('jquery'), $this->utils_get_assets_version(), true);
+        $this->common_assets(true);
     }
 
     public function add_shortcodes()

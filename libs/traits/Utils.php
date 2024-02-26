@@ -2,6 +2,8 @@
 
 namespace BTDEV_INSCRIERI\Traits;
 
+use BTDEV_INSCRIERI\Forms\DefaultData as DEFAULT_DATA;
+
 trait Utils
 {
     public function utils_get_absolute_path()
@@ -42,6 +44,20 @@ trait Utils
         if ($name !== null) {
             return $temp[$name];
         } else return $temp;
+    }
+
+    public function utils_get_forms($null_title = false)
+    {
+        $forms = [];
+
+        // TBD: very temporary!!!!;
+        if ($null_title !== false) {
+            $forms[''] = ['title' => __($null_title)];
+        }
+
+        $forms['momentum'] = ['title' => 'Momentum'];
+
+        return $forms;
     }
 
     public function utils_get_db_tables($name = null, $form = null)

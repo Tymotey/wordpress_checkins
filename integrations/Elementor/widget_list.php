@@ -1,9 +1,11 @@
 <?php
 
+use BTDEV_INSCRIERI\Traits\Utils as BTDEV_INSCRIERI_UTILS;
 use BTDEV_INSCRIERI\Classes\Tables as BTDEV_INSCRIERI_TABLES;
 
-class Elementor_Btdev_Widget_List_Entries extends \Elementor\Widget_Base
+class Elementor_Btdev_Widget_List extends \Elementor\Widget_Base
 {
+    use BTDEV_INSCRIERI_UTILS;
 
     public function get_name()
     {
@@ -38,6 +40,8 @@ class Elementor_Btdev_Widget_List_Entries extends \Elementor\Widget_Base
     protected function register_controls()
     {
         $table = new BTDEV_INSCRIERI_TABLES();
+        $forms = $this->utils_get_forms('Choose a form');
+
         $this->start_controls_section(
             'content_section',
             [
@@ -49,9 +53,9 @@ class Elementor_Btdev_Widget_List_Entries extends \Elementor\Widget_Base
         $this->add_control(
             'form_name',
             [
-                'type' => \Elementor\Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::SELECT,
                 'label' => esc_html__('Form', 'btdev_inscriere_text'),
-                'placeholder' => esc_html__('Enter your form id', 'btdev_inscriere_text'),
+                'options' => $forms
             ]
         );
 
