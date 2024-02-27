@@ -222,6 +222,7 @@ class Tables
             case 'entry-delete':
                 $action_data['text'] = 'Delete Entry';
                 $action_data['data']['idEntry'] = $entry['id_entry'];
+                $action_data['data']['idPayment'] = $entry['id_submission'];
                 $action_data['data']['action'] = 'btdev_inscrieri_entry_delete';
                 $action_data['data']['nonce'] = wp_create_nonce('btdev_inscrieri_entry_delete');
                 $action_data['attr']['confirm']['enabled'] = true;

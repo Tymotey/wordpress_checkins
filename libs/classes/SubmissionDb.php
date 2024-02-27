@@ -23,7 +23,16 @@ class SubmissionDb
 
     public function __construct($form = null)
     {
+        $this->table_submissions = $this->utils_get_db_tables('submission');
+        $this->table_checkins = $this->utils_get_db_tables('checkins');
+
         if (!is_object($form)) {
+            if (is_int($form)) {
+                global $wpdb;
+                $sql = "SELECT form_name FROM " . $this->table_submissions . " WHERE id_submission = " . $form;
+                $form = $wpdb->get_var($sql);
+            }
+
             $classname = 'BTDEV_INSCRIERI\\Forms\\Data' . ucfirst($form);
             $form_class = new $classname();
             $this->form = $form_class;
@@ -31,9 +40,7 @@ class SubmissionDb
             $this->form = $form;
         }
 
-        $this->table_submissions = $this->utils_get_db_tables('submission');
         $this->table_entries = $this->utils_get_db_tables('entry_form', $this->form->name);
-        $this->table_checkins = $this->utils_get_db_tables('checkins');
     }
 
     // SQL Parameters
@@ -171,5 +178,19 @@ class SubmissionDb
         } else {
             return false;
         }
+    }
+
+    public function delete_entry()
+    {
+        global $wpdb;
+
+        // $sql = "SELECT " . $this->prepare_sql_param('select') . " FROM " . $this->table_entries . " AS e LEFT JOIN " . $this->table_submissions . " AS s ON e.id_submission = s.id_submission" . $this->prepare_sql_param('where') . $this->prepare_sql_param('order_by') . $this->prepare_sql_param('group_by') . $this->prepare_sql_param('limit') . $this->prepare_sql_param('offset');
+        // $entries = $wpdb->get_results($sql, ARRAY_A);
+
+        // if ($entries !== null) {
+        //     return $entries;
+        // } else {
+        //     return false;
+        // }
     }
 }

@@ -59,6 +59,7 @@ class Main
         $this->add_scripts_css();
         add_action('init', array($this, 'add_shortcodes'));
         add_action('init', array($this, 'add_get_actions'));
+        add_action('wp_footer', array($this, 'add_footer_notification'));
         add_action('init', array(new BTDEV_INSCRIERI_API_TABLES(), 'add_ajax_handles'));
         add_action('init', array(new BTDEV_INSCRIERI_API_ENTRIES(), 'add_ajax_handles'));
 
@@ -115,6 +116,11 @@ class Main
     {
         wp_enqueue_script('btdev_inscriere_main_admin_script', $this->utils_get_absolute_url() . 'assets/admin/script.js', array('jquery'), $this->utils_get_assets_version(), true);
         $this->common_assets(true);
+    }
+
+    public function add_footer_notification()
+    {
+        echo '<div id="btdev_popup_notifications"></div>';
     }
 
     public function add_shortcodes()

@@ -31,6 +31,21 @@ class Entries extends DEFAULT_DATA
         try {
             // $this->var_dump($_POST, true);
             if (isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'btdev_inscrieri_entry_delete')) {
+                if (isset($_POST['idEntry']) && $_POST['idEntry'] !== '') {
+                    if (isset($_POST['idPayment']) && $_POST['idPayment'] !== '') {
+                        $id_entry = (int) sanitize_text_field($_POST['idEntry']);
+                        $id_payment = (int) sanitize_text_field($_POST['idPayment']);
+                        $submissionDb = new BTDEV_INSCRIERI_SUBMISSIONDB($id_payment);
+                        $submissionDb->delete_entry($id_entry);
+
+                        $return_val['status'] = true;
+                        $return_val['message'] = __('Entry #' . $id_entry . ' deleted.', 'btdev_inscriere_text');
+                    } else {
+                        throw new BTDEV_INSCRIERI_EXCEPTIONSAPI('No payment id sent');
+                    }
+                } else {
+                    throw new BTDEV_INSCRIERI_EXCEPTIONSAPI('No entry id sent');
+                }
             } else {
                 throw new BTDEV_INSCRIERI_EXCEPTIONSAPI('Incorrect nonce. Refresh the page and try again.');
             }

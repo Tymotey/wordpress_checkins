@@ -1,3 +1,1 @@
-jQuery(document).ready(function ($) {
-    console.log("ADMIN");
-});
+jQuery(document).ready(function ($) {});

@@ -464,17 +464,35 @@ jQuery(document).ready(function ($) {
                                     elementData,
                                     function (response) {
                                         if (response.status === true) {
+                                            window[
+                                                "btdevNotification"
+                                            ].showNotification({
+                                                text: response.message,
+                                            });
                                         } else {
-                                            console.log(response.text);
+                                            console.log(response.message);
+                                            window[
+                                                "btdevNotification"
+                                            ].showNotification({
+                                                text: response.message,
+                                                type: "error",
+                                            });
                                         }
                                     }
                                 )
                                 .fail(function (e) {
-                                    console.log(
+                                    let text =
                                         e.status +
-                                            ": " +
-                                            (e.statusText || "error")
-                                    );
+                                        ": " +
+                                        (e.statusText || "error");
+
+                                    console.log(text);
+                                    window[
+                                        "btdevNotification"
+                                    ].showNotification({
+                                        text: text,
+                                        type: "error",
+                                    });
                                 })
                                 .always(function () {
                                     element.removeAttr("attr-disabled");
@@ -492,143 +510,82 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    // TODO: TO LOOK OVER!!!!!!!!
-    if ($(".datatableBBSO").length) {
-        $("body").on("click", ".table_details_toggle", function (e) {
-            $(this).closest("table").find(".tr_to_toggle").toggle();
-        });
-        $("body").on("click", ".add_checkin", function (e) {
-            e.preventDefault();
-            let formName = $("#select_filter_list").val();
-            let idParticipant = $(this)
-                .closest("tr")
-                .attr("attr-id_participant");
+    class BtdevNotification {
+        elementId = "#btdev_popup_notifications";
+        wrapperNotifications = null;
+        defaultSettings = {
+            type: "success",
+            text: null,
+            closeAfter: 3000,
+            autoClose: true,
+            showClose: true,
+        };
 
-            $.post(
-                btdev_form_ajax.ajax_url,
-                {
-                    formName: formName,
-                    idParticipant: idParticipant,
-                    action: "bbso_form_add_checkin",
-                },
-                function (response) {
-                    if (response.status) {
-                        location.reload();
-                    } else {
-                        alert("Eroare: " + response.message);
-                    }
-                }
-            );
-        });
-        $("body").on("click", ".actions_wrapper .actions_icon", function (e) {
-            $(this).next().toggleClass("visible_menu");
-        });
-        $("body").on("click", ".delete_checkin", function (e) {
-            e.preventDefault();
-            if (confirm("Confirma stergete checkin")) {
-                let formName = $("#select_filter_list").val();
-                let idParticipant = $(this)
-                    .closest("tr")
-                    .attr("attr-id_participant");
-                let idCheckin = $(this).attr("attr-id_checkin");
-
-                $.post(
-                    btdev_form_ajax.ajax_url,
-                    {
-                        formName: formName,
-                        idParticipant: idParticipant,
-                        idCheckin: idCheckin,
-                        action: "bbso_form_delete_checkin",
-                    },
-                    function (response) {
-                        if (response.status) {
-                            location.reload();
-                        } else {
-                            alert("Eroare: " + response.message);
-                        }
+        constructor() {
+            let element = $(this.elementId);
+            let thisClass = this;
+            if (element.length > 0) {
+                this.wrapperNotifications = element;
+                $("body").on(
+                    "click",
+                    "#btdev_popup_notifications > div .close",
+                    function (ev) {
+                        thisClass.dismissNotification($(ev.target).parent());
                     }
                 );
             }
-        });
-        $("body").on("click", ".delete_participant", function (e) {
-            e.preventDefault();
-            if (confirm("Confirma stergete participant")) {
-                let formName = $("#select_filter_list").val();
-                let idParticipant = $(this)
-                    .closest("tr")
-                    .attr("attr-id_participant");
+        }
 
-                $.post(
-                    btdev_form_ajax.ajax_url,
+        dismissNotification(element) {
+            $(element)
+                .stop(true, true)
+                .animate(
                     {
-                        formName: formName,
-                        idParticipant: idParticipant,
-                        action: "bbso_form_delete_person",
+                        opacity: 0,
+                        height: 0,
                     },
-                    function (response) {
-                        if (response.status) {
-                            //location.reload();
-                        } else {
-                            alert("Eroare: " + response.message);
-                        }
+                    1000,
+                    function () {
+                        $(element).remove();
                     }
                 );
-            }
-        });
-        $("body").on("click", ".pay_participant", function (e) {
-            e.preventDefault();
-            let formName = $("#select_filter_list").val();
-            let idParticipant = $(this)
-                .closest("tr")
-                .attr("attr-id_participant");
+        }
 
-            $.post(
-                btdev_form_ajax.ajax_url,
-                {
-                    formName: formName,
-                    idParticipant: idParticipant,
-                    action: "bbso_form_pay_person",
-                },
-                function (response) {
-                    if (response.status) {
-                        //location.reload();
-                    } else {
-                        alert("Eroare: " + response.message);
-                    }
-                }
+        prepareHtml(settings) {
+            return (
+                `<div class="popup_notification_wrapper ` +
+                settings.type +
+                `">
+                <div class="text">` +
+                settings.text +
+                `</div>` +
+                (settings.showClose ? `<div class="close">x</div>` : ``)
             );
-        });
-        $("body").on("click", ".unpay_participant", function (e) {
-            e.preventDefault();
-            let formName = $("#select_filter_list").val();
-            let idParticipant = $(this)
-                .closest("tr")
-                .attr("attr-id_participant");
+        }
 
-            $.post(
-                btdev_form_ajax.ajax_url,
-                {
-                    formName: formName,
-                    idParticipant: idParticipant,
-                    action: "bbso_form_unpay_person",
-                },
-                function (response) {
-                    if (response.status) {
-                        //location.reload();
-                    } else {
-                        alert("Eroare: " + response.message);
-                    }
+        showNotification(settings = null) {
+            if (this.wrapperNotifications != null) {
+                let thisClass = this;
+                let mergedSettings = Object.assign(
+                    {},
+                    this.defaultSettings,
+                    settings
+                );
+                this.wrapperNotifications.append(
+                    this.prepareHtml(mergedSettings)
+                );
+                if (mergedSettings.autoClose) {
+                    let newElement = $(this.wrapperNotifications)
+                        .children()
+                        .last();
+                    setTimeout(() => {
+                        thisClass.dismissNotification(newElement);
+                    }, mergedSettings.closeAfter);
                 }
-            );
-        });
-    }
-    if ($("#form_stripe_filters").length) {
-        $("body").on(
-            "change",
-            "#select_filter_list, #select_filter_status",
-            function (e) {
-                $(this).closest("form").trigger("submit");
+            } else {
+                console.log("Notification element not found");
             }
-        );
+        }
     }
+    window["btdevNotification"] = new BtdevNotification();
 });
