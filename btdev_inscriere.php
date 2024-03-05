@@ -31,6 +31,7 @@ use BTDEV_INSCRIERI\Traits\HtmlMessages as BTDEV_INSCRIERI_MESSAGES;
 
 use BTDEV_INSCRIERI\Api\Tables as BTDEV_INSCRIERI_API_TABLES;
 use BTDEV_INSCRIERI\Api\Entries as BTDEV_INSCRIERI_API_ENTRIES;
+use BTDEV_INSCRIERI\Api\Submissions as BTDEV_INSCRIERI_API_SUBMISSIONS;
 use BTDEV_INSCRIERI\Classes\Shortcodes as BTDEV_INSCRIERI_SHORTCODES;
 use BTDEV_INSCRIERI\Classes\Submission as BTDEV_INSCRIERI_SUBMISSION;
 use BTDEV_INSCRIERI\Classes\Tables as BTDEV_INSCRIERI_TABLES;
@@ -40,7 +41,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-session_start();
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
 require_once 'vendor/autoload.php';
 
 class Main
@@ -62,6 +65,7 @@ class Main
         add_action('wp_footer', array($this, 'add_footer_notification'));
         add_action('init', array(new BTDEV_INSCRIERI_API_TABLES(), 'add_ajax_handles'));
         add_action('init', array(new BTDEV_INSCRIERI_API_ENTRIES(), 'add_ajax_handles'));
+        add_action('init', array(new BTDEV_INSCRIERI_API_SUBMISSIONS(), 'add_ajax_handles'));
 
         add_action('admin_init', array($this, 'load_integrations'));
     }
@@ -96,15 +100,14 @@ class Main
 
     public function init_assets()
     {
-        wp_enqueue_style('btdev_inscriere_datatable', 'https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css', array(), '1.13.1', 'all');
+        wp_enqueue_style('btdev_inscriere_datatable', '//cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css', array(), '2.0.1', 'all');
         wp_enqueue_style('btdev_inscriere_main', $this->utils_get_absolute_url() . 'assets/style.css', array(), $this->utils_get_assets_version(), 'all');
 
         wp_enqueue_script('btdev_inscriere_recaptcha', 'https://www.google.com/recaptcha/api.js', array(), '1.0', array('in_footer' => true, 'strategy' => 'async'));
-        wp_enqueue_script('btdev_inscriere_datatable', 'https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js', array('jquery'), '1.13.1', true);
+        wp_enqueue_script('btdev_inscriere_datatable', '//cdn.datatables.net/2.0.1/js/dataTables.min.js', array('jquery'), '2.0.1', true);
         wp_enqueue_script('btdev_inscriere_datatable_responsive', 'https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js', array('jquery'), '2.5.0', true);
         wp_enqueue_script('btdev_inscriere_datatable_fixed', 'https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js', array('jquery'), '3.4.0', true);
         wp_enqueue_script('btdev_inscriere_main_script', $this->utils_get_absolute_url() . 'assets/script.js', array('jquery'), $this->utils_get_assets_version(), true);
-
         $this->common_assets();
 
         if (!wp_style_is('dashicons')) {

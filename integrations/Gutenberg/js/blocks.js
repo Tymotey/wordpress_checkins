@@ -20,6 +20,7 @@ wp.blocks.registerBlockType("btdev-inscriere/form", {
             "div",
             null,
             React.createElement("h4", null, "BTDEV Inscrieri - Form"),
+            React.createElement("span", null, "Select a form: "),
             React.createElement(
                 "select",
                 {

@@ -414,13 +414,17 @@ jQuery(document).ready(function ($) {
     }
 
     if ($(".table_wrapper").length) {
-        $("body").on("change", "#filter_payment_status", function () {
+        function reloadActiveTable() {
             if (
                 window.datatableBTDEV.table !== undefined &&
                 window.datatableBTDEV.table !== undefined
             ) {
                 window.datatableBTDEV.table.draw();
             }
+        }
+
+        $("body").on("change", "#filter_payment_status", function () {
+            reloadActiveTable();
         });
 
         $("body").on("click", ".btdev_action_link", function () {
@@ -464,6 +468,7 @@ jQuery(document).ready(function ($) {
                                     elementData,
                                     function (response) {
                                         if (response.status === true) {
+                                            reloadActiveTable();
                                             window[
                                                 "btdevNotification"
                                             ].showNotification({

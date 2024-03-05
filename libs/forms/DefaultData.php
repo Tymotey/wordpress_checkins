@@ -200,7 +200,25 @@ abstract class DefaultData implements InterfaceForm
                 'hidden' => true,
             ],
         ],
-        'repeater_fields' => [],
+        'repeater_fields' => [
+            'firstname' => [
+                'type' => 'text',
+                'title' => 'Prenume',
+                'name' => 'firstname',
+                'requiredddddddd' => true,
+                'attr_html' => [
+                    'minlength' => 3
+                ],
+                'input_class_add' => ['firstname_entry']
+            ],
+            'lastname' => [
+                'type' => 'text',
+                'title' => 'Nume (Familie)',
+                'name' => 'lastname',
+                'requiredddddddd' => true,
+                'input_class_add' => ['lastname_entry']
+            ],
+        ],
 
         // Tables
         'tables' => [
@@ -314,6 +332,54 @@ abstract class DefaultData implements InterfaceForm
                     'added_payment' => [
                         'order' => 100,
                         'title' => 'Date Added',
+                    ]
+                ]
+            ],
+            'checkins' => [
+                'fields' => [
+                    'added_checkin' => [
+                        'order' => 0,
+                        'title' => 'Date',
+                        'type' => 'date',
+                    ],
+                    'checked_in_data' => [
+                        'order' => 10,
+                        'title' => 'Info',
+                        'type' => 'html',
+                    ],
+                    'id_submission' => [
+                        'order' => 20,
+                        'title' => 'Id Submission',
+                    ],
+                    'firstname' => [
+                        'order' => 30,
+                        'title' => 'Firstname',
+                        'table' => 'entry'
+                    ],
+                    'lastname' => [
+                        'order' => 40,
+                        'title' => 'Lastname',
+                        'table' => 'entry'
+                    ],
+                    'added_entry' => [
+                        'order' => 100,
+                        'title' => 'Date Added',
+                        'format' => 'date',
+                        'table' => 'entry',
+                        'settings_sql' => [
+                            'searchable' => false,
+                        ]
+                    ],
+                    'actions' => [
+                        'order' => 110,
+                        'title' => 'Actions',
+                        'settings_sql' => [
+                            'searchable' => false,
+                        ],
+                        'settings' => [
+                            'searchable' => false,
+                            'orderable' => false,
+                        ]
                     ]
                 ]
             ],
@@ -433,8 +499,10 @@ abstract class DefaultData implements InterfaceForm
         $name = __('Participant', 'btdev_inscriere_text');
         if (isset($form_data['firstname']) || isset($form_data['lastname'])) {
             $new_name = [];
-            if ($form_data['firstname'] !== '') $new_name[] = $form_data['firstname'];
-            if ($form_data['lastname'] !== '') $new_name[] = $form_data['lastname'];
+            if ($form_data['firstname'] !== '')
+                $new_name[] = $form_data['firstname'];
+            if ($form_data['lastname'] !== '')
+                $new_name[] = $form_data['lastname'];
             $name = implode(' ', $new_name);
         }
 
@@ -496,8 +564,10 @@ abstract class DefaultData implements InterfaceForm
             }
         }
 
-        if (!empty($return_data)) return $return_data;
-        else return false;
+        if (!empty($return_data))
+            return $return_data;
+        else
+            return false;
     }
 
     public function get_fields_logic()
@@ -528,8 +598,10 @@ abstract class DefaultData implements InterfaceForm
             }
         }
 
-        if (!empty($return_data)) return $return_data;
-        else return false;
+        if (!empty($return_data))
+            return $return_data;
+        else
+            return false;
     }
 
     public function get_form_page_url($for)

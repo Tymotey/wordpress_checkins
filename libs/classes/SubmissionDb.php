@@ -128,13 +128,38 @@ class SubmissionDb
         }
     }
 
-    // TODO: combine next functions into 2!
+    // Checkins
+    public function get_checkins_count()
+    {
+        global $wpdb;
+
+        $sql = "SELECT COUNT(*) AS count FROM " . $this->table_entries . " AS e LEFT JOIN " . $this->table_submissions . " AS s ON e.id_submission = s.id_submission LEFT JOIN " . $this->table_checkins . " AS c ON e.id_entry = c.id_entry" . $this->prepare_sql_param('where') . $this->prepare_sql_param('group_by');
+        $entries_count = $wpdb->get_var($sql);
+
+        return $entries_count;
+    }
+
+    public function get_checkins()
+    {
+        global $wpdb;
+
+        $sql = "SELECT " . $this->prepare_sql_param('select') . " FROM " . $this->table_entries . " AS e LEFT JOIN " . $this->table_submissions . " AS s ON e.id_submission = s.id_submission LEFT JOIN " . $this->table_checkins . " AS c ON e.id_entry = c.id_entry" . $this->prepare_sql_param('where') . $this->prepare_sql_param('order_by') . $this->prepare_sql_param('group_by') . $this->prepare_sql_param('limit') . $this->prepare_sql_param('offset');
+
+        $entries = $wpdb->get_results($sql, ARRAY_A);
+
+        if ($entries !== null) {
+            return $entries;
+        } else {
+            return false;
+        }
+    }
+
     // Submissions
     public function get_submissions_count()
     {
         global $wpdb;
 
-        $sql = "SELECT COUNT(*) FROM " . $this->table_submissions;
+        $sql = "SELECT COUNT(*) AS count FROM " . $this->table_submissions . " AS s " . $this->prepare_sql_param('where') . $this->prepare_sql_param('group_by');
         $entries_count = $wpdb->get_var($sql);
 
         return $entries_count;
@@ -144,11 +169,37 @@ class SubmissionDb
     {
         global $wpdb;
 
-        $sql = "SELECT " . $this->prepare_sql_param('select') . " FROM " . $this->table_submissions;
+        $sql = "SELECT " . $this->prepare_sql_param('select') . " FROM " . $this->table_submissions . " AS s" . $this->prepare_sql_param('where') . $this->prepare_sql_param('order_by') . $this->prepare_sql_param('group_by') . $this->prepare_sql_param('limit') . $this->prepare_sql_param('offset');
         $entries = $wpdb->get_results($sql, ARRAY_A);
 
         if ($entries !== null) {
             return $entries;
+        } else {
+            return false;
+        }
+    }
+
+    public function cancel_submission($id_submission)
+    {
+        global $wpdb;
+
+        $updated = $wpdb->update($this->table_submissions, ['payment_status' => 'canceled_by_us'], ['id_submission' => $id_submission]);
+
+        if ($updated !== false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function delete_submission($id_submission)
+    {
+        global $wpdb;
+
+        $deleted = $wpdb->delete($this->table_submissions, ['id_submission' => $id_submission]);
+
+        if ($deleted !== false) {
+            return true;
         } else {
             return false;
         }
@@ -180,17 +231,28 @@ class SubmissionDb
         }
     }
 
-    public function delete_entry()
+    public function delete_entry($id_entry)
     {
         global $wpdb;
 
-        // $sql = "SELECT " . $this->prepare_sql_param('select') . " FROM " . $this->table_entries . " AS e LEFT JOIN " . $this->table_submissions . " AS s ON e.id_submission = s.id_submission" . $this->prepare_sql_param('where') . $this->prepare_sql_param('order_by') . $this->prepare_sql_param('group_by') . $this->prepare_sql_param('limit') . $this->prepare_sql_param('offset');
-        // $entries = $wpdb->get_results($sql, ARRAY_A);
+        $deleted = $wpdb->delete($this->table_entries, array('id_entry' => $id_entry));
 
-        // if ($entries !== null) {
-        //     return $entries;
-        // } else {
-        //     return false;
-        // }
+        if ($deleted !== false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function delete_entries($id_submission)
+    {
+        global $wpdb;
+
+        $deleted = $wpdb->delete($this->table_submissions, array('id_submission' => $id_submission));
+
+        if ($deleted !== false) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

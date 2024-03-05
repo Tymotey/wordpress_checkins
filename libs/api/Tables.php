@@ -45,14 +45,23 @@ class Tables extends DEFAULT_DATA
                         $submissions_db_class->generate_sql_from_post($_POST, $table_class);
                         $field_id = 'id_entry';
 
-                        if ($table_type === 'submissions') {
+                        if ($table_type === 'checkins') {
+                            $entries = $submissions_db_class->get_checkins();
+                        } else if ($table_type === 'submissions') {
+                            $entries = $submissions_db_class->get_submissions();
                         } else {
                             $entries = $submissions_db_class->get_entries();
                         }
                         // $this->var_dump($entries, true);
 
                         if ($entries !== false) {
-                            $total_count = $submissions_db_class->get_entries_count();
+                            if ($table_type === 'checkins') {
+                                $total_count = $submissions_db_class->get_checkins_count();
+                            } else if ($table_type === 'submissions') {
+                                $total_count = $submissions_db_class->get_submissions_count();
+                            } else {
+                                $total_count = $submissions_db_class->get_entries_count();
+                            }
                             $return_val['recordsFiltered'] = (int) $total_count; // IF search => count($entries);
                             $return_val['recordsTotal'] = (int) $total_count;
                             $return_val['data'] = [];

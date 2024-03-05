@@ -65,23 +65,6 @@ class DataMomentum extends DEFAULT_DATA
 			],
 
 			'repeater_fields' => [
-				'firstname' => [
-					'type' => 'text',
-					'title' => 'Prenume',
-					'name' => 'firstname',
-					'requiredddddddd' => true,
-					'attr_html' => [
-						'minlength' => 3
-					],
-					'input_class_add' => ['firstname_entry']
-				],
-				'lastname' => [
-					'type' => 'text',
-					'title' => 'Nume (Familie)',
-					'name' => 'lastname',
-					'requiredddddddd' => true,
-					'input_class_add' => ['lastname_entry']
-				],
 				'oras' => [
 					'type' => 'text',
 					'title' => 'Oras',

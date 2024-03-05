@@ -259,7 +259,7 @@
 .summary_data .summary_persons{
 }
 
-/* ====== TABLE - General ======== */
+/* ====== TABLE - General ====== */
 .btdev_action_link{
     cursor: pointer;
     margin-right: 5px;
@@ -276,6 +276,11 @@
     opacity: 0.5;
 }
 
+
+/* ====== TABLES ====== */
+.btdev_inscrieri_table thead{ background-color: #FFFFFF; }
+
+/* ====== NOTIFICATION ====== */
 #btdev_popup_notifications{ position: fixed; bottom: 0px; max-width: 500px; width: 90%; left: calc( 50% - ( min(90%, 500px) / 2 ) ); }
 #btdev_popup_notifications .popup_notification_wrapper{ display: flex; justify-content: space-between; padding: 7px; margin: 5px 0px; border-radius: 8px; background-color: #00ff37; color: #FFF; }
 #btdev_popup_notifications .popup_notification_wrapper.error{ background-color: #ff0000; }

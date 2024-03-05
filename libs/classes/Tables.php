@@ -90,10 +90,9 @@ class Tables
 
     public function get_fields()
     {
-        $fields = false;
+        $fields = [];
 
         if (isset($this->form->full_data['tables'][$this->table_type]) && count($this->form->full_data['tables'][$this->table_type]['fields']) > 0) {
-            $fields = [];
             $fields = $this->form->full_data['tables'][$this->table_type]['fields'];
         }
 
@@ -231,9 +230,9 @@ class Tables
                     $action_data['icon'] = '<i class="dashicons dashicons-remove"></i>';
                 }
                 break;
-            case 'payment-cancel':
-                $action_data['text'] = 'Cancel Payment';
-                $action_data['data']['idEntry'] = $entry['id_entry'];
+            case 'submission-cancel':
+                $action_data['text'] = 'Cancel Submission';
+                $action_data['data']['idSubmission'] = $entry['id_submission'];
                 $action_data['data']['action'] = 'btdev_inscrieri_submission_cancel';
                 $action_data['data']['nonce'] = wp_create_nonce('btdev_inscrieri_submission_cancel');
                 $action_data['attr']['confirm']['enabled'] = true;
@@ -242,15 +241,26 @@ class Tables
                     $action_data['icon'] = '<i class="dashicons dashicons-no-alt"></i>';
                 }
                 break;
-            case 'payment-delete':
-                $action_data['text'] = 'Delete Payment';
-                $action_data['data']['idEntry'] = $entry['id_entry'];
+            case 'submission-delete':
+                $action_data['text'] = 'Delete Submission';
+                $action_data['data']['idSubmission'] = $entry['id_submission'];
                 $action_data['data']['action'] = 'btdev_inscrieri_submission_delete';
                 $action_data['data']['nonce'] = wp_create_nonce('btdev_inscrieri_submission_delete');
                 $action_data['attr']['confirm']['enabled'] = true;
-                $action_data['attr']['confirm']['text'] = 'This will delete the payment and all the entries of this payment. Please confirm.';
+                $action_data['attr']['confirm']['text'] = 'This will delete the submission and all the entries of this payment. Please confirm.';
                 if (in_array($action_data['style'], ['icon', 'icon_text'])) {
                     $action_data['icon'] = '<i class="dashicons dashicons-trash"></i>';
+                }
+                break;
+            case 'submission-enable':
+                $action_data['text'] = 'Enable Submission';
+                $action_data['data']['idSubmission'] = $entry['id_submission'];
+                $action_data['data']['action'] = 'btdev_inscrieri_submission_enable';
+                $action_data['data']['nonce'] = wp_create_nonce('btdev_inscrieri_submission_enable');
+                $action_data['attr']['confirm']['enabled'] = true;
+                $action_data['attr']['confirm']['text'] = 'This will enable the submission and all the entries of this payment. Please confirm.';
+                if (in_array($action_data['style'], ['icon', 'icon_text'])) {
+                    $action_data['icon'] = '<i class="dashicons dashicons-saved"></i>';
                 }
                 break;
         }
@@ -292,18 +302,27 @@ class Tables
             }
 
             return $return_data;
+        } else if ($field === 'checked_in_data') {
+            $return_data = '----';
+
+            return $return_data;
         } else if ($field === 'actions') {
             $html = '';
 
             if ($this->table_type === 'entries_admin') {
+                if (!in_array($entry['payment_status'], array('canceled', 'canceled_by_us'))) {
+                    $html .= $this->get_actions_html('submission-cancel', $entry);
+                }
                 $html .= $this->get_actions_html('entry-delete', $entry);
-                $html .= $this->get_actions_html('payment-cancel', $entry);
-                $html .= $this->get_actions_html('payment-delete', $entry);
+                $html .= $this->get_actions_html('submission-delete', $entry);
+                if ($entry['payment_status'] !== 'success') {
+                    $html .= $this->get_actions_html('submission-enable', $entry);
+                }
             }
 
             return $html;
         } else {
-            if (in_array($field_data['type'], ['select', 'radio', 'checkbox'])) {
+            if (is_array($field_data) && in_array($field_data['type'], ['select', 'radio', 'checkbox'])) {
                 $found = null;
                 foreach ($field_data['options'] as $k => $option) {
                     if ($k === $entry[$field]) {
@@ -339,7 +358,9 @@ class Tables
             $invoice_data[] = $entry['company_delegate'];
         }
 
-        if ($string) return implode(', ', $invoice_data);
-        else return $invoice_data;
+        if ($string)
+            return implode(', ', $invoice_data);
+        else
+            return $invoice_data;
     }
 }
