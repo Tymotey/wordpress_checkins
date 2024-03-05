@@ -1,16 +1,8 @@
-# DEV install
+# Plugin
 
-Composer is required. Download it from: [Composer page](https://getcomposer.org/download/)
-Node.js is required. Download it from: [Node.js page](https://nodejs.org/en/download/current)
+## Work in progress!
 
-```
-open terminal to plugin folder
-npm install
-composer install
-```
+Create functionality for custom tailored forms that needs:
 
-# DEV tests
-
-```
-npx playwright test --ui
-```
+-   repeating values to be completed
+-   payment with Stripe or Bank Transfer
