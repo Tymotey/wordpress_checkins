@@ -10,134 +10,134 @@ class DataMomentum extends DEFAULT_DATA
 	{
 		$this->name = 'momentum';
 		$this->full_data = $this->default_data;
-		$this->full_data = array_replace_recursive($this->full_data, [
+		$this->full_data = array_replace_recursive($this->full_data, array(
 			'mode' => 'test', // 'live', 'test'
 
-			'tandc' => [
+			'tandc' => array(
 				'enabled' => false,
 				'text' => 'Sunt de acord ca datele personale introduse să fie folosite în scopul organizării evenimentului și pentru anunțurile legate de acest eveniment sau următoarele evenimente.'
-			],
-			'captcha' => [
+			),
+			'captcha' => array(
 				'enabled' => false
-			],
-			'payment' => [
-				'with' => ['stripe', 'ordinPlata'],
+			),
+			'payment' => array(
+				'with' => array('stripe', 'ordinPlata'),
 				'enabled' => true,
 				'currency' => 'RON',
 				'base_price' => '15000',
 				'payment_for' => 'ConferintaMomentum',
 				'description' => 'Inscriere Conferinta Momentum'
-			],
-			'links' => [
+			),
+			'links' => array(
 				'url' => '/inregistrare',
 				'success' => '/inscriere-cu-succes',
 				'cancel' => '/inscriere-esuata',
 				'edit' => '/editeaza-inregistrare',
 				'view' => '/vizualizeaza-inregistrare',
-			],
+			),
 
 			'table' => 'btdev_entries_momentum',
 
-			'emails' => [
+			'emails' => array(
 				'description' => 'Conferinta Momentum',
-				'list' => [
-					'saved' => [
+				'list' => array(
+					'saved' => array(
 						'enabled' => false,
 						'content' => 'Salut!<br /><br />Îți mulțumim că ai completat formularul. Ai fost redirecționat la formularul de plată pentru a termina înscrierea la conferință.<br />Dacă ai închis fereasta poți da click <a href="%payment_link%">aici</a>(valabil 12h) pentru a reîncerca plata și termina înscrierea.<br />În cazul în care v-ați răzgândit dumneavoastră să participați, vă rugăm să nu luați în considerare acest mesaj.<br /><br />Iti multumim si te asteptam sa termini inscrierea.',
 						'subject' => 'Completare date',
-					],
-					'done' => [
+					),
+					'done' => array(
 						'enabled' => true,
 						'content' => 'Înscrierea la conferința MOMENTUM din data de 8-10 Februarie 2024 a fost realizată cu succes. <br /><br />Atelierele pentru care ai/ați optat sunt cele de mai jos:<br />%summary%<br /><br />Vă așteptăm cu acest e-mail în data de 8 Februarie 2024 de la ora 16:00 pentru check-in la Campusul Bisericii Baptiste Speranța din Oradea.',
 						'subject' => 'Te-ai/V-ați înscris cu succes!',
-					],
-					'not_done' => [
+					),
+					'not_done' => array(
 						'enabled' => true,
 						'content' => 'Ne pare rău să vă informăm că înscrierea dumneavoastră la această conferință nu a fost finalizată cu succes. Plata nu a putut fi înregistrată!<br />Dacă dorești să revii asupra plății, accesează următorul <a href="%payment_link%">LINK</a> pentru a continua plata (valabil 12h).<br /><br />În cazul în care v-ați răzgândit dumneavoastră să participați, vă rugăm să nu luați în considerare acest mesaj.<br /><br />Dacă ați întâmpinat probleme de natură tehnică în procesul de înscriere, vă rugăm să ne scrieți la adresa de e-mail: <a href="mailto:amin@bbso.ro">amin@bbso.ro</a>',
 						'subject' => 'Înregistrare eșuată!',
-					],
-					'edit' => [
+					),
+					'edit' => array(
 						'enabled' => true,
 						'content' => 'Ai editat înscrierea la conferința MOMENTUM din data de 8-10 Februarie 2024.<br /><br />Atelierele pentru care ai/ați optat sunt cele de mai jos:<br />%summary%',
 						'subject' => 'S-a editat înregistrarea',
-					]
-				]
-			],
+					)
+				)
+			),
 
-			'repeater_fields' => [
-				'oras' => [
+			'repeater_fields' => array(
+				'oras' => array(
 					'type' => 'text',
 					'title' => 'Oras',
 					'name' => 'oras',
 					'width' => 'third',
 					'requiredddddddd' => true,
-				],
-				'data_nasterii' => [
+				),
+				'data_nasterii' => array(
 					'type' => 'date',
 					'title' => 'Data nasterii',
 					'name' => 'data_nasterii',
 					'width' => 'third',
 					'requiredddddddd' => true,
-				],
-				'sex' => [
+				),
+				'sex' => array(
 					'type' => 'select',
 					'title' => 'Sex',
 					'name' => 'sex',
 					'width' => 'third',
-					'options' => [
-						'M' => ['title' => 'Masculin'],
-						'F' => ['title' => 'Feminin']
-					],
+					'options' => array(
+						'M' => array('title' => 'Masculin'),
+						'F' => array('title' => 'Feminin')
+					),
 					'requiredddddddd' => true,
-				],
-				'email' => [
+				),
+				'email' => array(
 					'type' => 'text',
 					'title' => 'Email',
 					'name' => 'email',
 					'requiredddddddd' => true,
-					'price' => ['value' => -1000, 'type' => 'relative']
-				],
-				'telefon' => [
+					'price' => array('value' => -1000, 'type' => 'relative')
+				),
+				'telefon' => array(
 					'type' => 'text',
 					'title' => 'Telefon',
 					'name' => 'telefon',
 					'placeholder' => '+40744111222',
 					'requiredddddddd' => true,
-					'attr_html' => [
+					'attr_html' => array(
 						'minlength' => 9
-					],
-				],
-				'biserica' => [
+					),
+				),
+				'biserica' => array(
 					'type' => 'text',
 					'title' => 'Biserica',
 					'name' => 'biserica',
 					'requiredddddddd' => true,
-				],
-				'domeniu' => [
+				),
+				'domeniu' => array(
 					'type' => 'select',
 					'title' => 'Implicare',
 					'name' => 'domeniu',
-					'options' => [
-						"" => ['title' => 'Alege domeniu'],
-						"pastor" => [
+					'options' => array(
+						"" => array('title' => 'Alege domeniu'),
+						"pastor" => array(
 							'title' => 'Pastor',
 							'show_in_form' => true,
-							'price' => ['value' => -1000, 'type' => 'relative']
-						],
-						"predicator" => ['title' => 'Predicator', 'disabled' => true],
-						"inchinare" => ['title' => 'Închinare'],
-						"tineri" => ['title' => 'Tineri'],
-						"copii" => ['title' => 'Copii'],
-						"adolescenti" => ['title' => 'Adolescenți'],
-						"grupuri_mici" => ['title' => 'Grupuri Mici'],
-						"administrativ" => ['title' => 'Administrativ'],
-						"bun_venit" => ['title' => 'Bun venit'],
-						"media" => ['title' => 'Dept. Media'],
-						"altele" => ['title' => 'Altele...'],
-					],
+							'price' => array('value' => -1000, 'type' => 'relative')
+						),
+						"predicator" => array('title' => 'Predicator', 'disabled' => true),
+						"inchinare" => array('title' => 'Închinare'),
+						"tineri" => array('title' => 'Tineri'),
+						"copii" => array('title' => 'Copii'),
+						"adolescenti" => array('title' => 'Adolescenți'),
+						"grupuri_mici" => array('title' => 'Grupuri Mici'),
+						"administrativ" => array('title' => 'Administrativ'),
+						"bun_venit" => array('title' => 'Bun venit'),
+						"media" => array('title' => 'Dept. Media'),
+						"altele" => array('title' => 'Altele...'),
+					),
 					'requiredddddddd' => true,
-				],
-				'html_atelier' => [
+				),
+				'html_atelier' => array(
 					'type' => 'html',
 					'name' => 'html_atelier',
 					'html' => '<h6 class="black_text normal_case">Selectează atelierele</h6>
@@ -151,82 +151,83 @@ class DataMomentum extends DEFAULT_DATA
 							</a>
 						</p>',
 					'width' => 'full'
-				],
-				'atelier_a' => [
+				),
+				'atelier_a' => array(
 					'type' => 'radio',
 					'title' => 'Atelier 1',
 					'name' => 'atelier_a',
 					'label_add' => 'Vineri(09.02.2024 10:45-12:00)',
-					'options' => [
-						'nu_particip' => ['title' => 'Nu particip', 'short_id' => 'nu'],
-						'atelier_razvan' => ['title' => 'Rolurile celor care coordonează lucrarea de închinare a bisericii', 'vorbitor' => 'Răzvan Rește', 'short_id' => 'at_raz', 'price' => ['value' => -5000, 'type' => 'relative']],
-						'atelier_cipri' => ['title' => '„Măsoară pulsul” lucrării și al comunității tale.', 'vorbitor' => 'Ciprian Gag', 'short_id' => 'at_cipri', 'price' => ['value' => 5000, 'type' => 'relative']],
-						'atelier_sido_cecilia' => ['title' => 'Kidz connect: conectarea generației aici și acum.', 'vorbitor' => 'Sidonia Gag & Cecilia Coita', 'short_id' => 'at_sido'],
-						'atelier_marcel' => ['title' => 'Grupurile mici și ADN-ul bisericii tale', 'vorbitor' => 'Marcel Niculaș', 'short_id' => 'at_mar'],
-						'atelier_romica' => ['title' => 'Cum să revitalizezi o biserică până nu-i prea târziu?', 'vorbitor' => 'Romică Iuga', 'short_id' => 'at_rom', 'price' => ['value' => 5000, 'type' => 'absolute']],
-						'atelier_anda' => ['title' => 'Epidemia de burnout și impactul său asupra bisericii locale din România', 'vorbitor' => 'Anda Mogoș', 'short_id' => 'at_and'],
-						'atelier_doroteea' => ['title' => 'Frica și anxietatea - cum le gestionăm credincioși fiind?', 'vorbitor' => 'Doroteea Purel', 'short_id' => 'at_dor'],
-						'atelier_samuel' => ['title' => 'Abuzul spiritual - o provocare pentru biserica contemporană', 'vorbitor' => 'Samuel Tuțac', 'short_id' => 'at_sam'],
-						'atelier_vlad' => ['title' => 'Între curiozitate, frământare, îndoială și necredință – întrebările tânărului din perspectivă apologetică', 'vorbitor' => 'Vlad Crîznic', 'short_id' => 'at_vla'],
-						'atelier_amiel_radu' => ['title' => 'Parteneriatele inter-bisericești în perioada apostolică: de la Pavel la Didahia(c. 50–90 d.hr.)', 'vorbitor' => 'Amiel Drimbe & Radu Gheorghiță', 'short_id' => 'at_ami'],
-						'atelier_teofil' => ['title' => 'Te iert, dar nu te uit', 'vorbitor' => 'Teofil Cotrău', 'short_id' => 'at_teo'],
-						'atelier_media' => ['title' => 'Rolul departamentului media în creșterea bisericii', 'vorbitor' => 'MEDIA BBSO', 'short_id' => 'at_med'],
-					],
+					'options' => array(
+						'nu_particip' => array('title' => 'Nu particip', 'short_id' => 'nu'),
+						'atelier_razvan' => array('title' => 'Rolurile celor care coordonează lucrarea de închinare a bisericii', 'vorbitor' => 'Răzvan Rește', 'short_id' => 'at_raz', 'price' => array('value' => -5000, 'type' => 'relative')),
+						'atelier_cipri' => array('title' => '„Măsoară pulsul” lucrării și al comunității tale.', 'vorbitor' => 'Ciprian Gag', 'short_id' => 'at_cipri', 'price' => array('value' => 5000, 'type' => 'relative')),
+						'atelier_sido_cecilia' => array('title' => 'Kidz connect: conectarea generației aici și acum.', 'vorbitor' => 'Sidonia Gag & Cecilia Coita', 'short_id' => 'at_sido'),
+						'atelier_marcel' => array('title' => 'Grupurile mici și ADN-ul bisericii tale', 'vorbitor' => 'Marcel Niculaș', 'short_id' => 'at_mar'),
+						'atelier_romica' => array('title' => 'Cum să revitalizezi o biserică până nu-i prea târziu?', 'vorbitor' => 'Romică Iuga', 'short_id' => 'at_rom', 'price' => array('value' => 5000, 'type' => 'absolute')),
+						'atelier_anda' => array('title' => 'Epidemia de burnout și impactul său asupra bisericii locale din România', 'vorbitor' => 'Anda Mogoș', 'short_id' => 'at_and'),
+						'atelier_doroteea' => array('title' => 'Frica și anxietatea - cum le gestionăm credincioși fiind?', 'vorbitor' => 'Doroteea Purel', 'short_id' => 'at_dor'),
+						'atelier_samuel' => array('title' => 'Abuzul spiritual - o provocare pentru biserica contemporană', 'vorbitor' => 'Samuel Tuțac', 'short_id' => 'at_sam'),
+						'atelier_vlad' => array('title' => 'Între curiozitate, frământare, îndoială și necredință – întrebările tânărului din perspectivă apologetică', 'vorbitor' => 'Vlad Crîznic', 'short_id' => 'at_vla'),
+						'atelier_amiel_radu' => array('title' => 'Parteneriatele inter-bisericești în perioada apostolică: de la Pavel la Didahia(c. 50–90 d.hr.)', 'vorbitor' => 'Amiel Drimbe & Radu Gheorghiță', 'short_id' => 'at_ami'),
+						'atelier_teofil' => array('title' => 'Te iert, dar nu te uit', 'vorbitor' => 'Teofil Cotrău', 'short_id' => 'at_teo'),
+						'atelier_media' => array('title' => 'Rolul departamentului media în creșterea bisericii', 'vorbitor' => 'MEDIA BBSO', 'short_id' => 'at_med'),
+					),
 					'disable_other' => 'atelier_ar',
 					'width' => 'full',
 					'requiredddddddd' => true,
-					'wrapper_class_add' => ['atelier_wrapper']
-				],
-				'atelier_ar' => [
+					'wrapper_class_add' => array('atelier_wrapper')
+				),
+				'atelier_ar' => array(
 					'type' => 'radio',
 					'title' => 'Atelier 2',
 					'name' => 'atelier_ar',
 					'label_add' => 'Vineri(09.02.2024 12:15-13:30)',
-					'options' => [
-						'nu_particip' => ['title' => 'Nu particip', 'short_id' => 'nu'],
-						'atelier_razvan' => ['title' => 'Rolurile celor care coordonează lucrarea de închinare a bisericii', 'vorbitor' => 'Răzvan Rește', 'short_id' => 'at_raz', 'price' => ['value' => -5000, 'type' => 'relative']],
-						'atelier_cipri' => ['title' => '„Măsoară pulsul” lucrării și al comunității tale.', 'vorbitor' => 'Ciprian Gag', 'short_id' => 'at_cipri', 'price' => ['value' => 5000, 'type' => 'relative']],
-						'atelier_sido_cecilia' => ['title' => 'Kidz connect: conectarea generației aici și acum.', 'vorbitor' => 'Sidonia Gag & Cecilia Coita', 'short_id' => 'at_sido'],
-						'atelier_marcel' => ['title' => 'Grupurile mici și ADN-ul bisericii tale', 'vorbitor' => 'Marcel Niculaș', 'short_id' => 'at_mar', 'price' => ['value' => -5000, 'type' => 'relative']],
-						'atelier_romica' => ['title' => 'Cum să revitalizezi o biserică până nu-i prea târziu?', 'vorbitor' => 'Romică Iuga', 'short_id' => 'at_rom'],
-						'atelier_anda' => ['title' => 'Epidemia de burnout și impactul său asupra bisericii locale din România', 'vorbitor' => 'Anda Mogoș', 'short_id' => 'at_and'],
-						'atelier_doroteea' => ['title' => 'Frica și anxietatea - cum le gestionăm credincioși fiind?', 'vorbitor' => 'Doroteea Purel', 'short_id' => 'at_dor'],
-						'atelier_samuel' => ['title' => 'Abuzul spiritual - o provocare pentru biserica contemporană', 'vorbitor' => 'Samuel Tuțac', 'short_id' => 'at_sam'],
-						'atelier_vlad' => ['title' => 'Între curiozitate, frământare, îndoială și necredință – întrebările tânărului din perspectivă apologetică', 'vorbitor' => 'Vlad Crîznic', 'short_id' => 'at_vla', 'disabled' => false],
-						'atelier_amiel_radu' => ['title' => 'Parteneriatele inter-bisericești în perioada apostolică: de la Pavel la Didahia(c. 50–90 d.hr.)', 'vorbitor' => 'Amiel Drimbe & Radu Gheorghiță', 'short_id' => 'at_ami', 'show_in_form' => false],
-						'atelier_teofil' => ['title' => 'Te iert, dar nu te uit', 'vorbitor' => 'Teofil Cotrău', 'short_id' => 'at_teo'],
-						'atelier_media' => ['title' => 'Rolul departamentului media în creșterea bisericii', 'vorbitor' => 'MEDIA BBSO', 'short_id' => 'at_med'],
-					],
+					'options' => array(
+						'nu_particip' => array('title' => 'Nu particip', 'short_id' => 'nu'),
+						'atelier_razvan' => array('title' => 'Rolurile celor care coordonează lucrarea de închinare a bisericii', 'vorbitor' => 'Răzvan Rește', 'short_id' => 'at_raz', 'price' => array('value' => -5000, 'type' => 'relative')),
+						'atelier_cipri' => array('title' => '„Măsoară pulsul” lucrării și al comunității tale.', 'vorbitor' => 'Ciprian Gag', 'short_id' => 'at_cipri', 'price' => array('value' => 5000, 'type' => 'relative')),
+						'atelier_sido_cecilia' => array('title' => 'Kidz connect: conectarea generației aici și acum.', 'vorbitor' => 'Sidonia Gag & Cecilia Coita', 'short_id' => 'at_sido'),
+						'atelier_marcel' => array('title' => 'Grupurile mici și ADN-ul bisericii tale', 'vorbitor' => 'Marcel Niculaș', 'short_id' => 'at_mar', 'price' => array('value' => -5000, 'type' => 'relative')),
+						'atelier_romica' => array('title' => 'Cum să revitalizezi o biserică până nu-i prea târziu?', 'vorbitor' => 'Romică Iuga', 'short_id' => 'at_rom'),
+						'atelier_anda' => array('title' => 'Epidemia de burnout și impactul său asupra bisericii locale din România', 'vorbitor' => 'Anda Mogoș', 'short_id' => 'at_and'),
+						'atelier_doroteea' => array('title' => 'Frica și anxietatea - cum le gestionăm credincioși fiind?', 'vorbitor' => 'Doroteea Purel', 'short_id' => 'at_dor'),
+						'atelier_samuel' => array('title' => 'Abuzul spiritual - o provocare pentru biserica contemporană', 'vorbitor' => 'Samuel Tuțac', 'short_id' => 'at_sam'),
+						'atelier_vlad' => array('title' => 'Între curiozitate, frământare, îndoială și necredință – întrebările tânărului din perspectivă apologetică', 'vorbitor' => 'Vlad Crîznic', 'short_id' => 'at_vla', 'disabled' => false),
+						'atelier_amiel_radu' => array('title' => 'Parteneriatele inter-bisericești în perioada apostolică: de la Pavel la Didahia(c. 50–90 d.hr.)', 'vorbitor' => 'Amiel Drimbe & Radu Gheorghiță', 'short_id' => 'at_ami', 'show_in_form' => false),
+						'atelier_teofil' => array('title' => 'Te iert, dar nu te uit', 'vorbitor' => 'Teofil Cotrău', 'short_id' => 'at_teo'),
+						'atelier_media' => array('title' => 'Rolul departamentului media în creșterea bisericii', 'vorbitor' => 'MEDIA BBSO', 'short_id' => 'at_med'),
+					),
 					'disable_other' => 'atelier_a',
 					'width' => 'full',
 					'requiredddddddd' => true,
-					'wrapper_class_add' => ['atelier_wrapper']
-				],
-				'total_row' => [
+					'wrapper_class_add' => array('atelier_wrapper')
+				),
+				'total_row' => array(
 					'type' => 'total_row',
 					'title' => '',
 					'name' => 'total_row',
 					'label_add' => 'Vineri(09.02.2024 12:15-13:30)',
 					'width' => 'full',
-				],
-			],
+				),
+			),
 
-			'tables' => [
-				'entries_public' => [
-					'fields' => [
-						'atelier_a' => [
+			'tables' => array(
+				'entries_public' => array(
+					'fields' => array(
+						'atelier_a' => array(
 							'order' => 40,
 							'title' => 'Atelier 1',
 							'table' => 'entry'
-						],
-						'atelier_ar' => [
+						),
+						'atelier_ar' => array(
 							'order' => 50,
 							'title' => 'Atelier 2',
 							'table' => 'entry'
-						]
-					]
-				],
-			],
-		]);
+						)
+					)
+				),
+			),
+		)
+		);
 	}
 }

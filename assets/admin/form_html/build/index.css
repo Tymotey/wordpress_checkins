@@ -1,0 +1,32 @@
+/*!***************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/index.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************/
+#btdev-inscriere-edit-form * {
+  box-sizing: border-box;
+}
+#btdev-inscriere-edit-form .category-container {
+  margin-bottom: 10px;
+  border: 1px solid #000000;
+  border-radius: 8px;
+}
+#btdev-inscriere-edit-form .category-container .category-title {
+  padding: 10px;
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+}
+#btdev-inscriere-edit-form .category-container .category-content {
+  padding: 10px;
+  width: 100%;
+  display: none;
+}
+#btdev-inscriere-edit-form .category-container.opened .category-title {
+  font-weight: bold;
+  border-bottom: 1px solid #000000;
+}
+#btdev-inscriere-edit-form .category-container.opened .category-content {
+  padding-top: 10px;
+  display: block;
+}
+
+/*# sourceMappingURL=index.css.map*/

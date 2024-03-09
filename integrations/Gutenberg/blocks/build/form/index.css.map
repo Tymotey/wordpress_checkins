@@ -1,0 +1,1 @@
+{"version":3,"file":"form/index.css","mappings":";;;AAAA;EACI;ACCJ,C","sources":["webpack://gutenberg_blocks/./src/_common/editor.scss","webpack://gutenberg_blocks/./src/form/editor.scss"],"sourcesContent":[".btdev-inscriere-block {\r\n    border: 1px dotted #f00;\r\n}\r\n",".btdev-inscriere-block {\n  border: 1px dotted #f00;\n}"],"names":[],"sourceRoot":""}

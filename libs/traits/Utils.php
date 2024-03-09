@@ -28,7 +28,8 @@ trait Utils
 
         if ($name !== null) {
             return $data['captcha'][$mode];
-        } else return false;
+        } else
+            return false;
     }
 
     public function utils_get_url_parameter($name = null)
@@ -43,7 +44,8 @@ trait Utils
 
         if ($name !== null) {
             return $temp[$name];
-        } else return $temp;
+        } else
+            return $temp;
     }
 
     public function utils_get_forms($null_title = false)
@@ -77,7 +79,8 @@ trait Utils
 
                 return $return_val;
             }
-        } else return $temp;
+        } else
+            return $temp;
     }
 
     public function utils_get_payment_data($name = null, $mode = 'live')
@@ -86,7 +89,8 @@ trait Utils
 
         if ($name !== null && isset($data[$name])) {
             return $data[$name][$mode];
-        } else return false;
+        } else
+            return false;
     }
 
     public function utils_get_payments_stats()
@@ -110,9 +114,22 @@ trait Utils
         }
     }
 
+    public function utils_is_debug()
+    {
+        return(defined('WP_DEBUG') && WP_DEBUG === true);
+    }
+    public function utils_is_script_debug()
+    {
+        return(defined('SCRIPT_DEBUG') && SCRIPT_DEBUG === true);
+    }
+    public function utils_is_any_debug()
+    {
+        return($this->utils_is_debug() || $this->utils_is_script_debug());
+    }
+
     public function utils_get_assets_version()
     {
-        if (defined('WP_DEBUG') && WP_DEBUG === true) {
+        if ($this->utils_is_any_debug()) {
             return date('ymdhis');
         }
         global $wp_version;

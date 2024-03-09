@@ -70,11 +70,12 @@ abstract class DefaultData implements InterfaceForm
                 'not_done' => [
                     'enabled' => true,
                     'content' => '',
+                    'subject' => '',
                 ],
                 'edit' => [
                     'enabled' => true,
                     'content' => '',
-                    'subject' => 'x',
+                    'subject' => '',
                 ]
             ]
         ],

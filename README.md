@@ -1,8 +1,7 @@
-# Plugin
+# Install
 
-## Work in progress!
+Go to Wordpress plugins
 
-Create functionality for custom tailored forms that needs:
+Install plugin
 
--   repeating values to be completed
--   payment with Stripe or Bank Transfer
+Enjoy

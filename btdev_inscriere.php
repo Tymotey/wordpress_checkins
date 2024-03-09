@@ -36,6 +36,10 @@ use BTDEV_INSCRIERI\Classes\Shortcodes as BTDEV_INSCRIERI_SHORTCODES;
 use BTDEV_INSCRIERI\Classes\Submission as BTDEV_INSCRIERI_SUBMISSION;
 use BTDEV_INSCRIERI\Classes\Tables as BTDEV_INSCRIERI_TABLES;
 use BTDEV_INSCRIERI\Classes\ThirdParty\Captcha as BTDEV_INSCRIERI_THIRDPARTY_CAPTCHA;
+use BTDEV_INSCRIERI\Posttypes\Form as BTDEV_INSCRIERI_POSTTYPE_FORM;
+
+use BTDEV_INSCRIERI\Integrations\Gutenberg\Gutenberg as BTDEV_INSCRIERI_INTEGRATIONS_GUTENBERG;
+use BTDEV_INSCRIERI\Integrations\Elementor\Elementor as BTDEV_INSCRIERI_INTEGRATIONS_ELEMENTOR;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -60,20 +64,28 @@ class Main
     public function load_module_hooks()
     {
         $this->add_scripts_css();
+        add_action('init', array($this, 'add_post_types'));
         add_action('init', array($this, 'add_shortcodes'));
         add_action('init', array($this, 'add_get_actions'));
         add_action('wp_footer', array($this, 'add_footer_notification'));
+
         add_action('init', array(new BTDEV_INSCRIERI_API_TABLES(), 'add_ajax_handles'));
         add_action('init', array(new BTDEV_INSCRIERI_API_ENTRIES(), 'add_ajax_handles'));
         add_action('init', array(new BTDEV_INSCRIERI_API_SUBMISSIONS(), 'add_ajax_handles'));
 
-        add_action('admin_init', array($this, 'load_integrations'));
+        add_action('init', array($this, 'load_integrations'));
     }
 
     public function add_scripts_css()
     {
         add_action('wp_enqueue_scripts', array($this, 'init_assets'));
         add_action('admin_enqueue_scripts', array($this, 'admin_init_assets'));
+        add_action('after_setup_theme', array($this, 'after_setup_theme'));
+    }
+
+    public function after_setup_theme()
+    {
+        add_theme_support('editor-styles');
     }
 
     public function common_assets($is_admin = false)
@@ -118,12 +130,33 @@ class Main
     public function admin_init_assets()
     {
         wp_enqueue_script('btdev_inscriere_main_admin_script', $this->utils_get_absolute_url() . 'assets/admin/script.js', array('jquery'), $this->utils_get_assets_version(), true);
+
+        // React form forms
+        $inc = require 'assets/admin/form_html/build/index.asset.php';
+        wp_enqueue_script(
+            'btdev_inscriere_admin_forms_form',
+            $this->utils_get_absolute_url() . 'assets/admin/form_html/build/index.js',
+            ($this->utils_is_any_debug() ? $inc['dependencies'] : array()),
+            ($this->utils_is_any_debug() ? $inc['version'] : $this->utils_get_assets_version()),
+            true
+        );
+        wp_enqueue_style('btdev_inscriere_admin_forms_form', $this->utils_get_absolute_url() . 'assets/admin/form_html/build/index.css', array(), $this->utils_get_assets_version(), 'all');
         $this->common_assets(true);
     }
 
     public function add_footer_notification()
     {
         echo '<div id="btdev_popup_notifications"></div>';
+    }
+
+    public function add_post_types()
+    {
+        $this->add_post_type_form();
+    }
+
+    public function add_post_type_form()
+    {
+        new BTDEV_INSCRIERI_POSTTYPE_FORM();
     }
 
     public function add_shortcodes()
@@ -133,10 +166,12 @@ class Main
         // General
         add_shortcode('bbdev_inscrieri_list_entries', array($shortcodes, 'list_entries'));
         add_shortcode('bbdev_inscrieri_list_payments', array($shortcodes, 'list_payments'));
+
         // For forms
         add_shortcode('bbdev_inscrieri_form', array($shortcodes, 'form'));
-        // TODO: must do edit
+        // TODO: must do edit form/code
         add_shortcode('bbdev_inscrieri_form_edit', array($shortcodes, 'form'));
+
         // For email
         add_shortcode('bbdev_inscrieri_entry_summary', array($shortcodes, 'submission_summary'));
     }
@@ -306,10 +341,10 @@ class Main
 
     public function load_integrations()
     {
-        require_once 'integrations/Gutenberg/integrate.php';
+        new BTDEV_INSCRIERI_INTEGRATIONS_GUTENBERG();
 
-        if (is_plugin_active('elementor/elementor.php')) {
-            require_once 'integrations/Elementor/integrate.php';
+        if (!defined('ELEMENTOR_TESTS')) {
+            new BTDEV_INSCRIERI_INTEGRATIONS_ELEMENTOR();
         }
     }
 }
